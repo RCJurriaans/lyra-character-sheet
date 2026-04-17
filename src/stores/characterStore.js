@@ -372,3 +372,24 @@ export const clearRollHistory = () => {
   characterStore.rollHistory = []
   saveCharacterState(characterStore)
 }
+
+// Navigation State Management (for page navigation)
+export const navigationState = reactive({
+  currentPage: localStorage.getItem('currentPage') || 'overview',
+  dismissedHints: [] // Session-only array of dismissed hint IDs
+})
+
+export const setCurrentPage = (pageName) => {
+  navigationState.currentPage = pageName
+  localStorage.setItem('currentPage', pageName)
+}
+
+export const dismissHint = (hintId) => {
+  if (!navigationState.dismissedHints.includes(hintId)) {
+    navigationState.dismissedHints.push(hintId)
+  }
+}
+
+export const clearDismissedHints = () => {
+  navigationState.dismissedHints = []
+}

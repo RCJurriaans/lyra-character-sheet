@@ -1,73 +1,30 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-fortuneNavy via-slate-900 to-slate-800">
-    <!-- Header -->
+    <!-- Header (always visible) -->
     <Header />
 
-    <!-- Character Selector Bar -->
+    <!-- Character Selector Bar (always visible) -->
     <div class="border-b border-slate-700 bg-slate-800/50 backdrop-blur-sm">
       <div class="container mx-auto px-2 sm:px-4 py-2 sm:py-3 max-w-7xl">
         <CharacterSelector />
       </div>
     </div>
 
-    <!-- Main Content Grid -->
+    <!-- Page Navigation (tab/dropdown switcher) -->
+    <PageNavigation />
+
+    <!-- Main Content - Pages -->
     <main class="container mx-auto px-2 sm:px-4 py-4 sm:py-6 max-w-7xl">
-      <!-- Active Combat Mode -->
-      <div v-if="isInCombat" class="mb-6 space-y-4">
-        <CombatTracker />
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ActionEconomy />
-          <ConditionTracker />
-        </div>
-      </div>
+      <!-- Page Content: Only one page visible at a time -->
+      <PageOverview v-show="navigationState.currentPage === 'overview'" />
+      <PageSpellcasting v-show="navigationState.currentPage === 'spellcasting'" />
+      <PageCombat v-show="navigationState.currentPage === 'combat'" />
+      <PageResources v-show="navigationState.currentPage === 'resources'" />
+      <PageSkills v-show="navigationState.currentPage === 'skills'" />
+      <PageInventory v-show="navigationState.currentPage === 'inventory'" />
 
-      <!-- Death Saves (show when at 0 HP) -->
-      <div v-if="characterStore.hitPoints.current === 0" class="mb-6">
-        <DeathSaves />
-      </div>
-
-      <!-- Main Character Sheet Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
-        <!-- Column 1: Core Stats -->
-        <div class="space-y-4">
-          <StatBlock />
-          <CharacterLore />
-        </div>
-
-        <!-- Column 2: Spellcasting -->
-        <div class="space-y-4">
-          <SpellSlots />
-          <SpellList />
-        </div>
-
-        <!-- Column 3: Combat & Resources (spans 1 col on md, 1 col on xl) -->
-        <div class="space-y-4 md:col-span-2 xl:col-span-1">
-          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-4">
-            <div class="space-y-4">
-              <HealingWidget />
-              <RollPanel />
-            </div>
-            <div class="space-y-4">
-              <LuckyPointsWidget />
-              <FeatureTracker />
-            </div>
-          </div>
-        </div>
-
-        <!-- Column 4: Tracking & Reference (spans full width on md, 1 col on xl) -->
-        <div class="space-y-4 md:col-span-2 xl:col-span-1">
-          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-4">
-            <SkillChecks />
-            <InventoryTracker />
-          </div>
-        </div>
-      </div>
-
-      <!-- Bottom Section: Campaign & Stats -->
-      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-        <CampaignNotes />
-        <RollStats />
-      </div>
+      <!-- Contextual Hints Panel -->
+      <HintsPanel />
 
       <!-- Rest & Control Buttons -->
       <div class="mt-8 grid grid-cols-2 md:flex md:justify-center gap-2 md:gap-4 flex-wrap">
@@ -89,27 +46,18 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { longRest, shortRest } from './stores/characterStore.js'
-import { characterStore } from './stores/characterStore.js'
+import { ref } from 'vue'
+import { longRest, shortRest, characterStore, navigationState, clearDismissedHints } from './stores/characterStore.js'
 import Header from './components/Header.vue'
 import CharacterSelector from './components/CharacterSelector.vue'
-import StatBlock from './components/StatBlock.vue'
-import SpellSlots from './components/SpellSlots.vue'
-import SpellList from './components/SpellList.vue'
-import RollPanel from './components/RollPanel.vue'
-import HealingWidget from './components/HealingWidget.vue'
-import LuckyPointsWidget from './components/LuckyPointsWidget.vue'
-import FeatureTracker from './components/FeatureTracker.vue'
-import CharacterLore from './components/CharacterLore.vue'
-import CombatTracker from './components/CombatTracker.vue'
-import SkillChecks from './components/SkillChecks.vue'
-import ActionEconomy from './components/ActionEconomy.vue'
-import ConditionTracker from './components/ConditionTracker.vue'
-import DeathSaves from './components/DeathSaves.vue'
-import InventoryTracker from './components/InventoryTracker.vue'
-import CampaignNotes from './components/CampaignNotes.vue'
-import RollStats from './components/RollStats.vue'
+import PageNavigation from './components/PageNavigation.vue'
+import HintsPanel from './components/HintsPanel.vue'
+import PageOverview from './components/PageOverview.vue'
+import PageSpellcasting from './components/PageSpellcasting.vue'
+import PageCombat from './components/PageCombat.vue'
+import PageResources from './components/PageResources.vue'
+import PageSkills from './components/PageSkills.vue'
+import PageInventory from './components/PageInventory.vue'
 
 const isInCombat = ref(false)
 

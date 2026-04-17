@@ -1,6 +1,7 @@
 import { reactive, computed } from 'vue'
 import characterData from '../data/character.json'
 import { loadCharacterState, saveCharacterState } from '../utils/storage.js'
+import { loadPreferences, savePreferences as savePrefsToStorage, DEFAULT_PREFERENCES } from '../utils/hintPreferences.js'
 
 const defaultState = structuredClone(characterData)
 
@@ -103,6 +104,9 @@ export const longRest = () => {
 
   // Restore Preserve Life
   characterStore.preserveLife.current = characterStore.preserveLife.max
+
+  // Clear session-dismissed hints on long rest
+  clearSessionDismissedHints()
 
   saveCharacterState(characterStore)
 }
@@ -376,7 +380,8 @@ export const clearRollHistory = () => {
 // Navigation State Management (for page navigation)
 export const navigationState = reactive({
   currentPage: localStorage.getItem('currentPage') || 'overview',
-  dismissedHints: [] // Session-only array of dismissed hint IDs
+  dismissedHints: [], // Session-only array of dismissed hint IDs
+  permanentlyDismissedHints: JSON.parse(localStorage.getItem('permanentlyDismissedHints') || '[]')
 })
 
 export const setCurrentPage = (pageName) => {
@@ -384,12 +389,77 @@ export const setCurrentPage = (pageName) => {
   localStorage.setItem('currentPage', pageName)
 }
 
-export const dismissHint = (hintId) => {
-  if (!navigationState.dismissedHints.includes(hintId)) {
-    navigationState.dismissedHints.push(hintId)
+export const dismissHint = (hintId, permanent = false) => {
+  if (permanent) {
+    if (!navigationState.permanentlyDismissedHints.includes(hintId)) {
+      navigationState.permanentlyDismissedHints.push(hintId)
+      localStorage.setItem('permanentlyDismissedHints', JSON.stringify(navigationState.permanentlyDismissedHints))
+    }
+  } else {
+    if (!navigationState.dismissedHints.includes(hintId)) {
+      navigationState.dismissedHints.push(hintId)
+    }
   }
 }
 
-export const clearDismissedHints = () => {
+export const undismissHint = (hintId, permanent = false) => {
+  if (permanent) {
+    const idx = navigationState.permanentlyDismissedHints.indexOf(hintId)
+    if (idx > -1) {
+      navigationState.permanentlyDismissedHints.splice(idx, 1)
+      localStorage.setItem('permanentlyDismissedHints', JSON.stringify(navigationState.permanentlyDismissedHints))
+    }
+  } else {
+    const idx = navigationState.dismissedHints.indexOf(hintId)
+    if (idx > -1) {
+      navigationState.dismissedHints.splice(idx, 1)
+    }
+  }
+}
+
+export const clearDismissedHints = (permanent = false) => {
+  if (permanent) {
+    navigationState.permanentlyDismissedHints = []
+    localStorage.removeItem('permanentlyDismissedHints')
+  } else {
+    navigationState.dismissedHints = []
+  }
+}
+
+export const clearSessionDismissedHints = () => {
   navigationState.dismissedHints = []
+}
+
+// Hint Preferences Management
+export const hintPreferences = reactive(loadPreferences())
+
+export const loadHintPreferences = () => {
+  const prefs = loadPreferences()
+  Object.assign(hintPreferences, prefs)
+  return prefs
+}
+
+export const saveHintPreferences = (prefs = null) => {
+  const prefsToSave = prefs || hintPreferences
+  Object.assign(hintPreferences, prefsToSave)
+  savePrefsToStorage(prefsToSave)
+}
+
+export const resetHintPreferences = () => {
+  Object.assign(hintPreferences, DEFAULT_PREFERENCES)
+  savePrefsToStorage(DEFAULT_PREFERENCES)
+}
+
+export const updateHintPreference = (key, value) => {
+  if (key.includes('.')) {
+    const [parent, child] = key.split('.')
+    hintPreferences[parent][child] = value
+  } else {
+    hintPreferences[key] = value
+  }
+  saveHintPreferences()
+}
+
+export const isDismissedHint = (hintId) => {
+  return navigationState.dismissedHints.includes(hintId) || navigationState.permanentlyDismissedHints.includes(hintId)
 }

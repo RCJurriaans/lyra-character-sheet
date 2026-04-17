@@ -5,13 +5,13 @@
 
     <!-- Character Selector Bar -->
     <div class="border-b border-slate-700 bg-slate-800/50 backdrop-blur-sm">
-      <div class="container mx-auto px-4 py-3 max-w-7xl">
+      <div class="container mx-auto px-2 sm:px-4 py-2 sm:py-3 max-w-7xl">
         <CharacterSelector />
       </div>
     </div>
 
     <!-- Main Content Grid -->
-    <main class="container mx-auto px-4 py-6 max-w-7xl">
+    <main class="container mx-auto px-2 sm:px-4 py-4 sm:py-6 max-w-7xl">
       <!-- Active Combat Mode -->
       <div v-if="isInCombat" class="mb-6 space-y-4">
         <CombatTracker />
@@ -27,53 +27,61 @@
       </div>
 
       <!-- Main Character Sheet Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <!-- Column 1: Core Stats (1 col) -->
-        <div class="lg:col-span-1 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+        <!-- Column 1: Core Stats -->
+        <div class="space-y-4">
           <StatBlock />
           <CharacterLore />
         </div>
 
-        <!-- Column 2: Spellcasting (1 col) -->
-        <div class="lg:col-span-1 space-y-4">
+        <!-- Column 2: Spellcasting -->
+        <div class="space-y-4">
           <SpellSlots />
           <SpellList />
         </div>
 
-        <!-- Column 3: Combat & Resources (1 col) -->
-        <div class="lg:col-span-1 space-y-4">
-          <HealingWidget />
-          <RollPanel />
-          <LuckyPointsWidget />
-          <FeatureTracker />
+        <!-- Column 3: Combat & Resources (spans 1 col on md, 1 col on xl) -->
+        <div class="space-y-4 md:col-span-2 xl:col-span-1">
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-4">
+            <div class="space-y-4">
+              <HealingWidget />
+              <RollPanel />
+            </div>
+            <div class="space-y-4">
+              <LuckyPointsWidget />
+              <FeatureTracker />
+            </div>
+          </div>
         </div>
 
-        <!-- Column 4: Tracking & Reference (1 col) -->
-        <div class="lg:col-span-1 space-y-4">
-          <SkillChecks />
-          <InventoryTracker />
+        <!-- Column 4: Tracking & Reference (spans full width on md, 1 col on xl) -->
+        <div class="space-y-4 md:col-span-2 xl:col-span-1">
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-4">
+            <SkillChecks />
+            <InventoryTracker />
+          </div>
         </div>
       </div>
 
       <!-- Bottom Section: Campaign & Stats -->
-      <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
         <CampaignNotes />
         <RollStats />
       </div>
 
       <!-- Rest & Control Buttons -->
-      <div class="mt-8 flex justify-center gap-4 flex-wrap">
-        <button @click="longRest" class="btn btn-gold">
-          ⏰ Long Rest (8 hours)
+      <div class="mt-8 grid grid-cols-2 md:flex md:justify-center gap-2 md:gap-4 flex-wrap">
+        <button @click="longRest" class="btn btn-gold text-xs md:text-sm py-2 px-2 md:px-4 min-h-10 md:min-h-auto">
+          ⏰ <span class="hidden xs:inline">Long Rest</span>
         </button>
-        <button @click="shortRest" class="btn btn-secondary">
-          ⚡ Short Rest (1 hour)
+        <button @click="shortRest" class="btn btn-secondary text-xs md:text-sm py-2 px-2 md:px-4 min-h-10 md:min-h-auto">
+          ⚡ <span class="hidden xs:inline">Rest</span>
         </button>
-        <button @click="toggleCombat" :class="['btn', isInCombat ? 'btn-secondary' : 'btn-gold']">
-          {{ isInCombat ? '⊘ End Combat' : '⚔️ Start Combat' }}
+        <button @click="toggleCombat" :class="['btn', isInCombat ? 'btn-secondary' : 'btn-gold', 'text-xs md:text-sm py-2 px-2 md:px-4 min-h-10 md:min-h-auto']">
+          {{ isInCombat ? '⊘ End' : '⚔️ Combat' }}
         </button>
-        <button @click="resetCharacter" class="btn btn-secondary">
-          🔄 Reset Character
+        <button @click="resetCharacter" class="btn btn-secondary text-xs md:text-sm py-2 px-2 md:px-4 min-h-10 md:min-h-auto">
+          🔄 <span class="hidden xs:inline">Reset</span>
         </button>
       </div>
     </main>

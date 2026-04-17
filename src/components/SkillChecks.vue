@@ -2,28 +2,28 @@
   <CardFrame title="⭐ Skill Checks" suit="wands" variant="gold" :show-flip="false">
     <div class="space-y-2">
       <!-- Skill Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-96 overflow-y-auto">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-96 overflow-y-auto">
         <div
           v-for="(skill, key) in skillList"
           :key="key"
-          class="flex items-center justify-between p-2 bg-slate-700 hover:bg-slate-600 rounded transition-colors"
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2 bg-slate-700 hover:bg-slate-600 rounded transition-colors gap-1 sm:gap-2"
         >
-          <div class="flex items-center gap-2 flex-1">
+          <div class="flex items-center gap-1 sm:gap-2 flex-1 min-w-0">
             <!-- Proficiency indicator -->
             <span
               :class="[
-                'inline-block w-3 h-3 rounded-full',
+                'inline-block w-3 h-3 rounded-full flex-shrink-0',
                 skill.proficient ? 'bg-fortuneGreen' : 'bg-slate-600'
               ]"
               :title="skill.proficient ? 'Proficient' : 'Not proficient'"
             ></span>
 
             <!-- Skill name and modifier -->
-            <div class="flex-1">
-              <span class="text-sm font-semibold text-gray-100">{{ skill.name }}</span>
+            <div class="flex-1 min-w-0">
+              <span class="text-xs sm:text-sm font-semibold text-gray-100 block truncate">{{ skill.name }}</span>
               <span
                 :class="[
-                  'text-xs ml-2 font-mono',
+                  'text-xs font-mono',
                   skill.mod >= 0 ? 'text-fortuneGreen' : 'text-fortuneRed'
                 ]"
               >
@@ -35,7 +35,7 @@
           <!-- Quick roll button -->
           <button
             @click="rollSkill(key, skill)"
-            class="btn btn-gold px-2 py-1 text-sm ml-2 hover:scale-105 transition-transform"
+            class="btn btn-gold px-2 sm:px-3 py-1 text-xs sm:text-sm ml-1 sm:ml-2 hover:scale-105 transition-transform flex-shrink-0 min-h-8 sm:min-h-auto"
             :title="`Roll ${skill.name}`"
           >
             🎲

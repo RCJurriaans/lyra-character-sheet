@@ -1,0 +1,79 @@
+{
+  "name": "Lyra",
+  "class": "Cleric",
+  "domain": "Life",
+  "level": 5,
+  "race": "Satyr",
+  "alignment": "Chaotic Good",
+  "background": "Faction Agent (Wayfarer's Concord)",
+  "abilities": {
+    "str": 12,
+    "dex": 14,
+    "con": 16,
+    "int": 8,
+    "wis": 17,
+    "cha": 12
+  },
+  "hitPoints": {
+    "current": 43,
+    "max": 43,
+    "temporary": 0
+  },
+  "ac": 19,
+  "initiative": 2,
+  "proficiencyBonus": 3,
+  "spellSaveDC": 14,
+  "spellAttackBonus": 6,
+  "spellSlots": {
+    "1": { "max": 4, "used": 0 },
+    "2": { "max": 3, "used": 0 },
+    "3": { "max": 2, "used": 0 }
+  },
+  "luckyPoints": {
+    "current": 3,
+    "max": 3
+  },
+  "channelDivinity": {
+    "used": false,
+    "maxUses": 1
+  },
+  "preserveLife": {
+    "current": 25,
+    "max": 25
+  },
+  "savingThrows": {
+    "str": 1,
+    "dex": 2,
+    "con": 3,
+    "int": -1,
+    "wis": 6,
+    "cha": 4
+  },
+  "skills": {
+    "acrobatics": { "mod": 2, "proficient": false },
+    "animalHandling": { "mod": 3, "proficient": false },
+    "arcana": { "mod": -1, "proficient": false },
+    "athletics": { "mod": 1, "proficient": false },
+    "deception": { "mod": 1, "proficient": false },
+    "history": { "mod": -1, "proficient": false },
+    "insight": { "mod": 6, "proficient": true },
+    "intimidation": { "mod": 1, "proficient": false },
+    "investigation": { "mod": -1, "proficient": false },
+    "medicine": { "mod": 6, "proficient": true },
+    "nature": { "mod": -1, "proficient": false },
+    "perception": { "mod": 6, "proficient": true },
+    "performance": { "mod": 4, "proficient": true },
+    "persuasion": { "mod": 4, "proficient": true },
+    "religion": { "mod": -1, "proficient": false },
+    "sleightOfHand": { "mod": 2, "proficient": false },
+    "stealth": { "mod": 2, "proficient": false },
+    "survival": { "mod": 3, "proficient": false }
+  },
+  "languages": ["Common", "Sylvan", "Dwarvish", "Goblin"],
+  "traits": {
+    "personality": "I flip a coin or draw a card to make every major decision. Fate knows better than I do.",
+    "ideal": "Freedom (Chaotic): The world is a game of chance, and everyone deserves a turn to roll the dice.",
+    "bond": "The Wayfarer's Concord took me in when my 'accidents' got too big for my village. I owe them my service.",
+    "flaw": "I am completely blind to danger. I will walk into a dragon's den if I think there's a shiny coin inside."
+  }
+}

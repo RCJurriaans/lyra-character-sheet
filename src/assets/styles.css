@@ -1,0 +1,98 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-fortuneNavy to-slate-900 text-gray-100 font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-bold;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-slate-800 border border-gold-400 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow;
+  }
+
+  .card-gold {
+    @apply bg-gradient-to-br from-gold-100 to-gold-200 border-2 border-gold-400 text-slate-900;
+  }
+
+  .btn {
+    @apply px-4 py-2 rounded-lg font-semibold transition-all duration-200 cursor-pointer;
+  }
+
+  .btn-gold {
+    @apply bg-gold-400 hover:bg-gold-500 text-slate-900 border border-gold-600 shadow-lg;
+  }
+
+  .btn-gold:active {
+    @apply scale-95;
+  }
+
+  .btn-secondary {
+    @apply bg-slate-700 hover:bg-slate-600 text-gray-100 border border-slate-600;
+  }
+
+  .stat-box {
+    @apply bg-slate-700 border-l-4 border-gold-400 p-3 rounded;
+  }
+
+  .spell-slot-box {
+    @apply w-8 h-8 flex items-center justify-center border-2 border-gold-400 rounded cursor-pointer transition-all;
+  }
+
+  .spell-slot-box.available {
+    @apply bg-gradient-to-br from-gold-300 to-gold-400 text-slate-900 font-bold hover:shadow-lg hover:shadow-gold-400/50;
+  }
+
+  .spell-slot-box.used {
+    @apply bg-slate-700 text-slate-500 border-slate-600;
+  }
+
+  .hp-bar {
+    @apply h-6 rounded-full border-2 border-gold-400 overflow-hidden;
+  }
+
+  .hp-fill {
+    @apply h-full transition-all duration-300 flex items-center justify-center text-xs font-bold;
+  }
+
+  .fortune-glow {
+    @apply shadow-lg shadow-gold-400/30 hover:shadow-gold-400/50 transition-shadow;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  animation: shimmer 3s infinite;
+  background-image: linear-gradient(90deg, transparent 0%, rgba(255,215,0,0.3) 50%, transparent 100%);
+  background-size: 1000px 100%;
+}
+
+@keyframes coin-flip {
+  0% {
+    transform: rotateY(0deg) scale(1);
+  }
+  50% {
+    transform: rotateY(90deg) scale(1.1);
+  }
+  100% {
+    transform: rotateY(0deg) scale(1);
+  }
+}
+
+.coin-flip {
+  animation: coin-flip 0.6s ease-out;
+}

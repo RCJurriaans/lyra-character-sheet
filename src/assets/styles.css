@@ -14,11 +14,27 @@
 
 @layer components {
   .card {
-    @apply bg-slate-800 border border-gold-400 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow;
+    @apply bg-slate-800 border border-gold-400 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow relative;
+    border-image: linear-gradient(135deg, #D4AF37, #F5E6D3, #D4AF37) 1;
   }
 
   .card-gold {
     @apply bg-gradient-to-br from-gold-100 to-gold-200 border-2 border-gold-400 text-slate-900;
+  }
+
+  .card-tarot {
+    @apply bg-slate-800 border-2 border-tarot-purple-400 rounded-lg p-4 shadow-lg;
+    box-shadow: 0 0 15px rgba(157, 78, 221, 0.2), inset 0 0 15px rgba(157, 78, 221, 0.1);
+  }
+
+  .card-tarot-gold {
+    @apply bg-slate-800 border-2 border-gold-400 rounded-lg p-4;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3), inset 0 0 10px rgba(212, 175, 55, 0.1);
+  }
+
+  .card-tarot-silver {
+    @apply bg-slate-800 border-2 border-tarot-silver rounded-lg p-4;
+    box-shadow: 0 0 15px rgba(232, 224, 213, 0.2);
   }
 
   .btn {
@@ -95,4 +111,79 @@
 
 .coin-flip {
   animation: coin-flip 0.6s ease-out;
+}
+
+/* Tarot-specific styling */
+.tarot-section {
+  @apply relative;
+  background-image:
+    radial-gradient(circle at 10% 0%, rgba(157, 78, 221, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 90% 100%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+}
+
+.tarot-border {
+  border: 2px solid;
+  border-image: linear-gradient(45deg, #D4AF37, #9D4EDD, #D4AF37) 1;
+  position: relative;
+  padding: 1rem;
+}
+
+.tarot-border::before,
+.tarot-border::after {
+  content: '✦';
+  position: absolute;
+  font-size: 1rem;
+  color: #D4AF37;
+}
+
+.tarot-border::before {
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tarot-border::after {
+  bottom: -12px;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+.tarot-glow {
+  animation: mystical-glow 2s ease-in-out infinite;
+  @apply border-gold-400;
+}
+
+.tarot-card-header {
+  @apply flex items-center gap-3 mb-4;
+}
+
+.tarot-card-header::before {
+  content: attr(data-suit);
+  @apply text-2xl font-serif text-gold-400;
+}
+
+.suit-cups::before {
+  content: '♡';
+}
+
+.suit-wands::before {
+  content: '♣';
+}
+
+.suit-coins::before {
+  content: '♦';
+}
+
+.suit-swords::before {
+  content: '♠';
+}
+
+.tarot-divider {
+  @apply border-t-2 border-b-2 my-3 py-2 text-center text-gold-400 text-sm;
+  border-image: linear-gradient(90deg, transparent, #D4AF37 20%, #D4AF37 80%, transparent) 1;
+}
+
+.tarot-divider::before {
+  content: '✦ ✦ ✦';
+  font-size: 0.8rem;
 }

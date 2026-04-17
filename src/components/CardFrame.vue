@@ -10,7 +10,10 @@
   >
     <!-- Header with suit symbol and title -->
     <div v-if="title" class="tarot-card-header" :class="`suit-${suit}`">
-      <h2 class="text-xl font-serif font-bold text-gold-300 flex-1">{{ title }}</h2>
+      <div class="flex items-center gap-2 flex-1">
+        <span class="tarot-suit-icon">{{ suitIcon }}</span>
+        <h2 class="text-xl font-serif font-bold text-gold-300">{{ title }}</h2>
+      </div>
       <span v-if="subtitle" class="text-xs text-gold-400 font-serif uppercase">{{ subtitle }}</span>
     </div>
 
@@ -32,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const props = defineProps({
   title: {
@@ -78,6 +81,15 @@ const variantClass = {
   purple: 'card-tarot',
   silver: 'card-tarot-silver'
 }[props.variant]
+
+const suitIcon = computed(() => {
+  return {
+    cups: '♡',
+    wands: '♣',
+    coins: '♦',
+    swords: '♠'
+  }[props.suit]
+})
 </script>
 
 <style scoped>
@@ -87,5 +99,22 @@ const variantClass = {
 
 .tarot-glow:hover {
   transform: translateY(-2px);
+}
+
+.tarot-suit-icon {
+  font-size: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  animation: tarot-shimmer 3s ease-in-out infinite;
+}
+
+@keyframes tarot-shimmer {
+  0%, 100% {
+    opacity: 0.8;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 2px 8px rgba(212, 175, 55, 0.6);
+  }
 }
 </style>

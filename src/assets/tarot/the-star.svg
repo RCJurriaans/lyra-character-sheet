@@ -1,0 +1,46 @@
+<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b6914;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5a3a1a;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="starPattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="5" cy="5" r="1" fill="#d4af37" opacity="0.3"/>
+    </pattern>
+  </defs>
+
+  <rect x="2" y="2" width="96" height="136" fill="url(#starGrad)" stroke="#d4af37" stroke-width="2" rx="4"/>
+  <rect x="2" y="2" width="96" height="136" fill="url(#starPattern)" stroke="none" rx="4"/>
+
+  <text x="8" y="18" font-family="Cinzel, serif" font-size="16" font-weight="bold" fill="#d4af37">XVII</text>
+
+  <text x="50" y="35" font-family="Cinzel, serif" font-size="13" font-weight="bold" fill="#d4af37" text-anchor="middle" letter-spacing="1">
+    THE STAR
+  </text>
+
+  <!-- Large central star -->
+  <g>
+    <!-- Create 5-pointed star -->
+    <polygon points="50,45 55,60 71,60 57,70 62,85 50,75 38,85 43,70 29,60 45,60" fill="none" stroke="#d4af37" stroke-width="2"/>
+
+    <!-- Inner star -->
+    <polygon points="50,52 54,62 63,62 55,68 59,78 50,72 41,78 45,68 37,62 46,62" fill="#d4af37" opacity="0.4"/>
+  </g>
+
+  <!-- Surrounding stars (smaller) -->
+  <text x="25" y="50" font-size="12" fill="#d4af37">✦</text>
+  <text x="75" y="50" font-size="12" fill="#d4af37">✦</text>
+  <text x="20" y="75" font-size="10" fill="#d4af37" opacity="0.7">✧</text>
+  <text x="80" y="75" font-size="10" fill="#d4af37" opacity="0.7">✧</text>
+
+  <!-- Rays of light -->
+  <line x1="50" y1="35" x2="50" y2="42" stroke="#d4af37" stroke-width="1" opacity="0.5"/>
+  <line x1="35" y1="48" x2="40" y2="50" stroke="#d4af37" stroke-width="1" opacity="0.5"/>
+  <line x1="65" y1="48" x2="60" y2="50" stroke="#d4af37" stroke-width="1" opacity="0.5"/>
+
+  <text x="92" y="128" font-size="12" fill="#d4af37">✦</text>
+
+  <text x="50" y="128" font-family="Arial, sans-serif" font-size="8" fill="#c0c0c0" text-anchor="middle" opacity="0.8">
+    GUIDANCE • HOPE • CLARITY
+  </text>
+</svg>

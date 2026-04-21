@@ -12,18 +12,50 @@
 
       <!-- Quick Stats -->
       <div class="hidden md:flex gap-6 text-center items-center">
-        <div class="stat-box">
-          <div class="text-xs font-bold uppercase stat-label">AC</div>
-          <div class="text-2xl font-bold stat-value">{{ store.ac }}</div>
-        </div>
-        <div class="stat-box">
-          <div class="text-xs font-bold uppercase stat-label">Spell DC</div>
-          <div class="text-2xl font-bold stat-value">{{ store.spellSaveDC }}</div>
-        </div>
-        <div class="stat-box">
-          <div class="text-xs font-bold uppercase stat-label">Spell ATK</div>
-          <div class="text-2xl font-bold stat-value">+{{ store.spellAttackBonus }}</div>
-        </div>
+        <!-- AC Stat with Tooltip -->
+        <StatTooltip title="Armor Class (AC)">
+          <div class="stat-box">
+            <div class="text-xs font-bold uppercase stat-label">AC</div>
+            <div class="text-2xl font-bold stat-value">{{ store.ac }}</div>
+          </div>
+          <template #content>
+            <div>
+              <p class="mb-2"><span class="tooltip-emphasis font-bold">What it means:</span> How hard you are to hit in combat. Higher AC = harder to hit.</p>
+              <p class="mb-2"><span class="tooltip-emphasis font-bold">Calculation:</span> Base 10 + Armor bonus + Shield bonus + DEX modifier</p>
+              <p><span class="tooltip-emphasis font-bold">When to use:</span> Enemies roll d20 + their attack bonus and compare to your AC. If they meet or exceed it, they hit you.</p>
+            </div>
+          </template>
+        </StatTooltip>
+
+        <!-- Spell Save DC with Tooltip -->
+        <StatTooltip title="Spell Save DC">
+          <div class="stat-box">
+            <div class="text-xs font-bold uppercase stat-label">Spell DC</div>
+            <div class="text-2xl font-bold stat-value">{{ store.spellSaveDC }}</div>
+          </div>
+          <template #content>
+            <div>
+              <p class="mb-2"><span class="tooltip-emphasis font-bold">What it means:</span> The difficulty class for enemies to resist your spells that require saving throws.</p>
+              <p class="mb-2"><span class="tooltip-emphasis font-bold">Calculation:</span> 8 + Spellcasting ability modifier (WIS +3) + Proficiency bonus (+3)</p>
+              <p><span class="tooltip-emphasis font-bold">When to use:</span> When you cast spells like <em>Hold Person</em> or <em>Toll the Dead</em>, enemies roll saving throws against this DC to resist the effect.</p>
+            </div>
+          </template>
+        </StatTooltip>
+
+        <!-- Spell Attack Bonus with Tooltip -->
+        <StatTooltip title="Spell Attack Bonus">
+          <div class="stat-box">
+            <div class="text-xs font-bold uppercase stat-label">Spell ATK</div>
+            <div class="text-2xl font-bold stat-value">+{{ store.spellAttackBonus }}</div>
+          </div>
+          <template #content>
+            <div>
+              <p class="mb-2"><span class="tooltip-emphasis font-bold">What it means:</span> Your bonus to attack rolls for spells that require you to hit a target.</p>
+              <p class="mb-2"><span class="tooltip-emphasis font-bold">Calculation:</span> Spellcasting ability modifier (WIS +3) + Proficiency bonus (+3)</p>
+              <p><span class="tooltip-emphasis font-bold">When to use:</span> When casting spell attacks like <em>Guiding Bolt</em> or <em>Spiritual Weapon</em>, roll d20 + {{ store.spellAttackBonus }} and compare to enemy AC.</p>
+            </div>
+          </template>
+        </StatTooltip>
 
         <!-- Theme Selector -->
         <ThemeSelector />
@@ -34,6 +66,7 @@
 
 <script setup>
 import { characterStore } from '../stores/characterStore.js'
+import StatTooltip from './StatTooltip.vue'
 import ThemeSelector from './ThemeSelector.vue'
 
 const store = characterStore
@@ -63,5 +96,9 @@ const store = characterStore
 
 .stat-value {
   color: var(--theme-primaryLight);
+}
+
+.tooltip-emphasis {
+  color: var(--theme-primary);
 }
 </style>

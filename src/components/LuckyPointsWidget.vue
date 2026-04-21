@@ -24,10 +24,21 @@
     </div>
 
     <!-- Lucky Points Info -->
-    <div class="text-center text-sm text-gray-400 mb-4">
-      <div class="font-bold text-gold-300">{{ store.luckyPoints.current }} / {{ store.luckyPoints.max }}</div>
-      <p class="text-xs mt-1">Spend to re-roll d20s or add to checks</p>
-    </div>
+    <StatTooltip title="Lucky Points">
+      <div class="text-center text-sm text-gray-400 mb-4">
+        <div class="font-bold text-gold-300">{{ store.luckyPoints.current }} / {{ store.luckyPoints.max }}</div>
+        <p class="text-xs mt-1">Spend to re-roll d20s or add to checks</p>
+      </div>
+      <template #content>
+        <div>
+          <p class="mb-2"><span class="text-gold-300 font-bold">What it means:</span> A Satyr's ability to defy fate. You have 3 Lucky Points per long rest.</p>
+          <p class="mb-2"><span class="text-gold-300 font-bold">How to use (pick ONE):</span></p>
+          <p class="mb-1"><span class="text-gold-300">Option A - Re-roll:</span> When you roll a d20, you can spend 1 Lucky Point to re-roll. Use the new result (even if lower).</p>
+          <p class="mb-2"><span class="text-gold-300">Option B - Add to roll:</span> Spend 1 Lucky Point to add 1d4 to an ability check, attack roll, or save AFTER you see the result.</p>
+          <p><span class="text-gold-300 font-bold">Reset:</span> Lucky Points reset to 3 after a long rest.</p>
+        </div>
+      </template>
+    </StatTooltip>
 
     <!-- Spent Points Animation -->
     <div v-if="justSpent" class="animate-pulse text-center text-gold-400 text-sm">
@@ -39,6 +50,7 @@
 <script setup>
 import { ref } from 'vue'
 import { characterStore, spendLuckyPoint } from '../stores/characterStore.js'
+import StatTooltip from './StatTooltip.vue'
 
 const store = characterStore
 const justSpent = ref(false)

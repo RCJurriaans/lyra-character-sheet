@@ -5,23 +5,41 @@
       <div class="space-y-4">
         <!-- Round and Turn Display -->
         <div class="grid grid-cols-2 gap-4">
-          <div class="bg-slate-700 rounded p-3 text-center">
-            <div class="text-xs text-gold-400 font-bold uppercase">Round</div>
-            <div class="text-3xl font-bold text-gold-300">{{ combatState.currentRound }}</div>
-            <div class="flex gap-2 justify-center mt-2">
-              <button @click="decrementRound" class="btn btn-secondary px-2 py-1 text-sm">−</button>
-              <button @click="incrementRound" class="btn btn-gold px-2 py-1 text-sm">+</button>
+          <StatTooltip title="Combat Round">
+            <div class="bg-slate-700 rounded p-3 text-center">
+              <div class="text-xs text-gold-400 font-bold uppercase">Round</div>
+              <div class="text-3xl font-bold text-gold-300">{{ combatState.currentRound }}</div>
+              <div class="flex gap-2 justify-center mt-2">
+                <button @click="decrementRound" class="btn btn-secondary px-2 py-1 text-sm">−</button>
+                <button @click="incrementRound" class="btn btn-gold px-2 py-1 text-sm">+</button>
+              </div>
             </div>
-          </div>
+            <template #content>
+              <div>
+                <p class="mb-2"><span class="text-gold-300 font-bold">What it is:</span> A round is 6 seconds of game time where everyone gets one turn in initiative order.</p>
+                <p class="mb-2"><span class="text-gold-300 font-bold">How it works:</span> All combatants act in initiative order (highest roll first). When everyone has taken their turn, the round ends and a new round begins.</p>
+                <p><span class="text-gold-300 font-bold">Example:</span> Round 1: Everyone rolls initiative. Round 2: Everyone gets another turn. This continues until combat ends.</p>
+              </div>
+            </template>
+          </StatTooltip>
 
-          <div class="bg-slate-700 rounded p-3 text-center">
-            <div class="text-xs text-gold-400 font-bold uppercase">Turn</div>
-            <div class="text-3xl font-bold text-gold-300">{{ combatState.currentTurn + 1 }}</div>
-            <div class="flex gap-2 justify-center mt-2">
-              <button @click="previousTurn" class="btn btn-secondary px-2 py-1 text-sm">← Prev</button>
-              <button @click="nextTurn" class="btn btn-gold px-2 py-1 text-sm">Next →</button>
+          <StatTooltip title="Turn Order">
+            <div class="bg-slate-700 rounded p-3 text-center">
+              <div class="text-xs text-gold-400 font-bold uppercase">Turn</div>
+              <div class="text-3xl font-bold text-gold-300">{{ combatState.currentTurn + 1 }}</div>
+              <div class="flex gap-2 justify-center mt-2">
+                <button @click="previousTurn" class="btn btn-secondary px-2 py-1 text-sm">← Prev</button>
+                <button @click="nextTurn" class="btn btn-gold px-2 py-1 text-sm">Next →</button>
+              </div>
             </div>
-          </div>
+            <template #content>
+              <div>
+                <p class="mb-2"><span class="text-gold-300 font-bold">What it is:</span> Your position in the initiative order. Turn 1 goes first, then turn 2, etc.</p>
+                <p class="mb-2"><span class="text-gold-300 font-bold">How it works:</span> On your turn, you can move (30 ft), take 1 action, take 1 bonus action, and use 1 reaction. After your turn, the next person goes.</p>
+                <p><span class="text-gold-300 font-bold">Note:</span> Click "Next" after you finish your turn to move to the next combatant. Click "+" on Round when everyone has gone.</p>
+              </div>
+            </template>
+          </StatTooltip>
         </div>
 
         <!-- Initiative Order -->
@@ -96,6 +114,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import CardFrame from './CardFrame.vue'
+import StatTooltip from './StatTooltip.vue'
 import { characterStore } from '../stores/characterStore.js'
 
 // Initialize combat state if not exists

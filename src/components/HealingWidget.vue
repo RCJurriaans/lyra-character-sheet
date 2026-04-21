@@ -6,12 +6,22 @@
 
     <!-- HP Bar -->
     <div class="mb-4">
-      <div class="flex justify-between items-center mb-2">
-        <span class="text-sm font-bold">{{ store.hitPoints.current }} / {{ store.hitPoints.max }}</span>
-        <span v-if="store.hitPoints.temporary > 0" class="text-xs text-fortuneGreen">
-          +{{ store.hitPoints.temporary }} Temporary
-        </span>
-      </div>
+      <StatTooltip title="Hit Points (HP)">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-sm font-bold">{{ store.hitPoints.current }} / {{ store.hitPoints.max }}</span>
+          <span v-if="store.hitPoints.temporary > 0" class="text-xs text-fortuneGreen">
+            +{{ store.hitPoints.temporary }} Temporary
+          </span>
+        </div>
+        <template #content>
+          <div>
+            <p class="mb-2"><span class="text-gold-300 font-bold">What it means:</span> Your current health. When HP reaches 0, you fall unconscious and begin making death saves.</p>
+            <p class="mb-2"><span class="text-gold-300 font-bold">Max HP:</span> {{ store.hitPoints.max }} (8 base + CON modifier ×{{ store.level }} levels)</p>
+            <p class="mb-2"><span class="text-gold-300 font-bold">Current:</span> {{ store.hitPoints.current }} HP</p>
+            <p><span class="text-gold-300 font-bold">When to use:</span> Subtract damage taken. Gain healing from spells or potions. At 0 HP, start making death saves.</p>
+          </div>
+        </template>
+      </StatTooltip>
 
       <div class="hp-bar">
         <div
@@ -24,45 +34,71 @@
     </div>
 
     <!-- Damage/Heal Inputs -->
-    <div class="space-y-3">
-      <div class="flex gap-2">
-        <input
-          v-model.number="damageAmount"
-          type="number"
-          min="1"
-          placeholder="Damage amount"
-          class="flex-1 bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm"
-        />
-        <button @click="takeDamage" class="btn btn-gold px-3">
-          💔 Damage
-        </button>
-      </div>
+    <div class="flex flex-col gap-4">
+      <StatTooltip title="Take Damage">
+        <div class="flex gap-2">
+          <input
+            v-model.number="damageAmount"
+            type="number"
+            min="1"
+            placeholder="Damage amount"
+            class="flex-1 bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm"
+          />
+          <button @click="takeDamage" class="btn btn-gold px-3">
+            💔 Damage
+          </button>
+        </div>
+        <template #content>
+          <div>
+            <p class="mb-2"><span class="text-gold-300 font-bold">What it does:</span> Reduces your current HP by the damage amount. Damage goes through temporary HP first, then your actual HP.</p>
+            <p><span class="text-gold-300 font-bold">When to use:</span> When you take damage from an enemy attack, spell, trap, or hazard, enter the damage value and click Damage.</p>
+          </div>
+        </template>
+      </StatTooltip>
 
-      <div class="flex gap-2">
-        <input
-          v-model.number="healAmount"
-          type="number"
-          min="1"
-          placeholder="Heal amount"
-          class="flex-1 bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm"
-        />
-        <button @click="heal" class="btn btn-gold px-3">
-          ✨ Heal
-        </button>
-      </div>
+      <StatTooltip title="Heal">
+        <div class="flex gap-2">
+          <input
+            v-model.number="healAmount"
+            type="number"
+            min="1"
+            placeholder="Heal amount"
+            class="flex-1 bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm"
+          />
+          <button @click="heal" class="btn btn-gold px-3">
+            ✨ Heal
+          </button>
+        </div>
+        <template #content>
+          <div>
+            <p class="mb-2"><span class="text-gold-300 font-bold">What it does:</span> Increases your HP. You cannot exceed your maximum HP.</p>
+            <p class="mb-2"><span class="text-gold-300 font-bold">Sources:</span> Healing Word, Healing Aura, potions, or bed rest (1d4 per day during long rest).</p>
+            <p><span class="text-gold-300 font-bold">When to use:</span> After taking damage, enter healing amount and click Heal.</p>
+          </div>
+        </template>
+      </StatTooltip>
 
-      <div class="flex gap-2">
-        <input
-          v-model.number="tempHPAmount"
-          type="number"
-          min="0"
-          placeholder="Temporary HP"
-          class="flex-1 bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm"
-        />
-        <button @click="setTempHP" class="btn btn-secondary px-3">
-          Set Temp HP
-        </button>
-      </div>
+      <StatTooltip title="Temporary Hit Points">
+        <div class="flex gap-2">
+          <input
+            v-model.number="tempHPAmount"
+            type="number"
+            min="0"
+            placeholder="Temporary HP"
+            class="flex-1 bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm"
+          />
+          <button @click="setTempHP" class="btn btn-secondary px-3">
+            Set Temp HP
+          </button>
+        </div>
+        <template #content>
+          <div>
+            <p class="mb-2"><span class="text-gold-300 font-bold">What it means:</span> Extra "shield" HP that absorbs damage first. When you take damage, it reduces Temp HP before your actual HP.</p>
+            <p class="mb-2"><span class="text-gold-300 font-bold">Mechanics:</span> Temporary HP doesn't stack—if you get 5 Temp HP when you have 3, you still have 5 (not 8). Temp HP goes away after a long rest or when you would heal.</p>
+            <p><span class="text-gold-300 font-bold">Sources:</span> Spells like Arcane Ward, Infusions, or magic items.</p>
+          </div>
+        </template>
+      </StatTooltip>
     </div>
 
     <!-- Death Saves -->
@@ -79,6 +115,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { characterStore, takeDamage as store_takeDamage, heal as store_heal, setTemporaryHP as store_setTempHP } from '../stores/characterStore.js'
+import StatTooltip from './StatTooltip.vue'
 
 const store = characterStore
 const damageAmount = ref(1)

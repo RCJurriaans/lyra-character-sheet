@@ -4,26 +4,49 @@
       🎲 Roll Check
     </h2>
 
-    <div class="space-y-3">
+    <div class="flex flex-col gap-4">
       <!-- Roll Type -->
-      <div>
-        <label class="text-xs text-gold-400 font-bold uppercase">Roll Type</label>
-        <select v-model="rollType" class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm mt-1">
-          <option value="ability">Ability Check</option>
-          <option value="save">Saving Throw</option>
-          <option value="attack">Attack Roll</option>
-        </select>
-      </div>
+      <StatTooltip title="Roll Type">
+        <div>
+          <label class="text-xs text-gold-400 font-bold uppercase">Roll Type</label>
+          <select v-model="rollType" class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm mt-1">
+            <option value="ability">Ability Check</option>
+            <option value="save">Saving Throw</option>
+            <option value="attack">Attack Roll</option>
+          </select>
+        </div>
+        <template #content>
+          <div>
+            <p class="mb-2"><span class="text-gold-300 font-bold">Ability Check:</span> Roll d20 + ability modifier for tasks like climbing, deceiving, or investigating.</p>
+            <p class="mb-2"><span class="text-gold-300 font-bold">Saving Throw:</span> Roll d20 + ability modifier to resist spells/effects. WIS saves resist many control effects.</p>
+            <p><span class="text-gold-300 font-bold">Attack Roll:</span> Roll d20 + proficiency/attack bonus to hit enemies in combat.</p>
+          </div>
+        </template>
+      </StatTooltip>
 
       <!-- Ability Selection -->
-      <div>
-        <label class="text-xs text-gold-400 font-bold uppercase">Ability</label>
-        <select v-model="selectedAbility" class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm mt-1">
-          <option v-for="(name, abbr) in abilityNames" :key="abbr" :value="abbr">
-            {{ name }} ({{ getMod(abbr) >= 0 ? '+' : '' }}{{ getMod(abbr) }})
-          </option>
-        </select>
-      </div>
+      <StatTooltip title="Select Ability">
+        <div>
+          <label class="text-xs text-gold-400 font-bold uppercase">Ability</label>
+          <select v-model="selectedAbility" class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm mt-1">
+            <option v-for="(name, abbr) in abilityNames" :key="abbr" :value="abbr">
+              {{ name }} ({{ getMod(abbr) >= 0 ? '+' : '' }}{{ getMod(abbr) }})
+            </option>
+          </select>
+        </div>
+        <template #content>
+          <div>
+            <p class="mb-2"><span class="text-gold-300 font-bold">Your modifier will be added to the roll.</span></p>
+            <p class="mb-2">Common uses:</p>
+            <p class="mb-1"><span class="text-gold-300">STR:</span> Athletics (climbing, jumping), grappling</p>
+            <p class="mb-1"><span class="text-gold-300">DEX:</span> Acrobatics, initiative, stealth, balancing</p>
+            <p class="mb-1"><span class="text-gold-300">CON:</span> Endurance, concentration saves</p>
+            <p class="mb-1"><span class="text-gold-300">INT:</span> Arcana, history, investigation</p>
+            <p class="mb-1"><span class="text-gold-300">WIS:</span> Insight, medicine, perception, survival</p>
+            <p><span class="text-gold-300">CHA:</span> Deception, intimidation, persuasion, performance</p>
+          </div>
+        </template>
+      </StatTooltip>
 
       <!-- Roll Button -->
       <button @click="performRoll" class="btn btn-gold w-full">
@@ -63,6 +86,7 @@
 import { ref, computed } from 'vue'
 import { characterStore } from '../stores/characterStore.js'
 import { rollAbilityCheck, rollSavingThrow } from '../utils/diceRoller.js'
+import StatTooltip from './StatTooltip.vue'
 
 const store = characterStore
 const rollType = ref('ability')

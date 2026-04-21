@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-fortuneNavy via-slate-900 to-slate-800">
+  <div class="min-h-screen transition-colors duration-300" :style="{ backgroundColor: 'var(--theme-background)' }">
     <!-- Header (always visible) -->
     <Header />
 
@@ -46,8 +46,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { longRest, shortRest, characterStore, navigationState, clearDismissedHints } from './stores/characterStore.js'
+import { useTheme } from './stores/themeStore.js'
 import Header from './components/Header.vue'
 import CharacterSelector from './components/CharacterSelector.vue'
 import PageNavigation from './components/PageNavigation.vue'
@@ -59,7 +60,12 @@ import PageResources from './components/PageResources.vue'
 import PageSkills from './components/PageSkills.vue'
 import PageInventory from './components/PageInventory.vue'
 
+const { initTheme } = useTheme()
 const isInCombat = ref(false)
+
+onMounted(() => {
+  initTheme()
+})
 
 const toggleCombat = () => {
   isInCombat.value = !isInCombat.value

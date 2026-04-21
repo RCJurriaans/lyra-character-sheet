@@ -7,6 +7,17 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Theme variables
+        'theme-primary': 'var(--theme-primary, #D4AF37)',
+        'theme-primary-light': 'var(--theme-primaryLight, #F5E6D3)',
+        'theme-primary-dark': 'var(--theme-primaryDark, #B8960E)',
+        'theme-secondary': 'var(--theme-secondary, #1A3A4A)',
+        'theme-accent': 'var(--theme-accent, #9D4EDD)',
+        'theme-background': 'var(--theme-background, #1A3A4A)',
+        'theme-surface': 'var(--theme-surface, #2D3E47)',
+        'theme-text': 'var(--theme-text, #E8E0D5)',
+        'theme-text-secondary': 'var(--theme-textSecondary, #9CA3AF)',
+
         gold: {
           50: '#FDF8F0',
           100: '#F9EDD7',

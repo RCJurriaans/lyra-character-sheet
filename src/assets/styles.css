@@ -2,9 +2,24 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+:root {
+  --theme-primary: #D4AF37;
+  --theme-primaryLight: #F5E6D3;
+  --theme-primaryDark: #B8960E;
+  --theme-secondary: #1A3A4A;
+  --theme-accent: #9D4EDD;
+  --theme-background: #1A3A4A;
+  --theme-surface: #2D3E47;
+  --theme-text: #E8E0D5;
+  --theme-textSecondary: #9CA3AF;
+}
+
 @layer base {
   body {
-    @apply bg-gradient-to-br from-fortuneNavy to-slate-900 text-gray-100 font-sans;
+    @apply bg-gradient-to-br text-gray-100 font-sans;
+    background-color: var(--theme-background);
+    color: var(--theme-text);
+    transition: all 0.3s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -14,26 +29,36 @@
 
 @layer components {
   .card {
-    @apply bg-slate-800 border border-gold-400 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow relative;
-    border-image: linear-gradient(135deg, #D4AF37, #F5E6D3, #D4AF37) 1;
+    @apply border rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow relative;
+    background-color: var(--theme-surface);
+    border-color: var(--theme-primary);
+    border-image: linear-gradient(135deg, var(--theme-primary), var(--theme-primaryLight), var(--theme-primary)) 1;
   }
 
   .card-gold {
-    @apply bg-gradient-to-br from-gold-100 to-gold-200 border-2 border-gold-400 text-slate-900;
+    @apply bg-gradient-to-br border-2 text-slate-900;
+    background: linear-gradient(to bottom right, var(--theme-primaryLight), var(--theme-primary));
+    border-color: var(--theme-primary);
   }
 
   .card-tarot {
-    @apply bg-slate-800 border-2 border-tarot-purple-400 rounded-lg p-4 shadow-lg;
+    @apply border-2 rounded-lg p-4 shadow-lg;
+    background-color: var(--theme-surface);
+    border-color: var(--theme-accent);
     box-shadow: 0 0 15px rgba(157, 78, 221, 0.2), inset 0 0 15px rgba(157, 78, 221, 0.1);
   }
 
   .card-tarot-gold {
-    @apply bg-slate-800 border-2 border-gold-400 rounded-lg p-4;
+    @apply border-2 rounded-lg p-4;
+    background-color: var(--theme-surface);
+    border-color: var(--theme-primary);
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.3), inset 0 0 10px rgba(212, 175, 55, 0.1);
   }
 
   .card-tarot-silver {
-    @apply bg-slate-800 border-2 border-tarot-silver rounded-lg p-4;
+    @apply border-2 rounded-lg p-4;
+    background-color: var(--theme-surface);
+    border-color: var(--theme-text);
     box-shadow: 0 0 15px rgba(232, 224, 213, 0.2);
   }
 
@@ -42,7 +67,9 @@
   }
 
   .btn-gold {
-    @apply bg-gold-400 hover:bg-gold-500 text-slate-900 border border-gold-600 shadow-lg;
+    @apply hover:opacity-90 border shadow-lg text-slate-900;
+    background-color: var(--theme-primary);
+    border-color: var(--theme-primaryDark);
   }
 
   .btn-gold:active {
@@ -50,35 +77,49 @@
   }
 
   .btn-secondary {
-    @apply bg-slate-700 hover:bg-slate-600 text-gray-100 border border-slate-600;
+    @apply hover:opacity-80 border;
+    background-color: var(--theme-surface);
+    border-color: var(--theme-primary);
+    color: var(--theme-text);
   }
 
   .stat-box {
-    @apply bg-slate-700 border-l-4 border-gold-400 p-3 rounded;
+    @apply border-l-4 p-3 rounded;
+    background-color: var(--theme-surface);
+    border-color: var(--theme-primary);
   }
 
   .spell-slot-box {
-    @apply w-8 h-8 flex items-center justify-center border-2 border-gold-400 rounded cursor-pointer transition-all;
+    @apply w-8 h-8 flex items-center justify-center border-2 rounded cursor-pointer transition-all;
+    border-color: var(--theme-primary);
   }
 
   .spell-slot-box.available {
-    @apply bg-gradient-to-br from-gold-300 to-gold-400 text-slate-900 font-bold hover:shadow-lg hover:shadow-gold-400/50;
+    @apply text-slate-900 font-bold hover:shadow-lg;
+    background: linear-gradient(to bottom right, var(--theme-primaryLight), var(--theme-primary));
+    box-shadow: 0 0 8px var(--theme-primary);
   }
 
   .spell-slot-box.used {
-    @apply bg-slate-700 text-slate-500 border-slate-600;
+    @apply text-slate-500;
+    background-color: var(--theme-surface);
+    border-color: var(--theme-textSecondary);
   }
 
   .hp-bar {
-    @apply h-6 rounded-full border-2 border-gold-400 overflow-hidden;
+    @apply h-6 rounded-full border-2 overflow-hidden;
+    border-color: var(--theme-primary);
   }
 
   .hp-fill {
     @apply h-full transition-all duration-300 flex items-center justify-center text-xs font-bold;
+    background-color: var(--theme-primary);
+    color: var(--theme-secondary);
   }
 
   .fortune-glow {
-    @apply shadow-lg shadow-gold-400/30 hover:shadow-gold-400/50 transition-shadow;
+    @apply shadow-lg transition-shadow;
+    box-shadow: 0 0 15px var(--theme-primary);
   }
 }
 

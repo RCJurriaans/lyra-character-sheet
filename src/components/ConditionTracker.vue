@@ -32,13 +32,21 @@
           <label :for="`condition-${condition}`" class="flex-1 text-sm cursor-pointer">
             {{ label }}
           </label>
-          <span
-            v-if="conditionDescriptions[condition]"
-            class="text-xs text-gray-400 ml-auto"
-            :title="conditionDescriptions[condition]"
-          >
-            ?
-          </span>
+          <StatTooltip v-if="conditionDetails[condition]" :title="label">
+            <span class="condition-help-btn">?</span>
+            <template #content>
+              <div>
+                <p
+                  v-for="(detail, i) in conditionDetails[condition]"
+                  :key="i"
+                  class="mb-1"
+                >
+                  <span class="font-bold condition-emphasis">{{ detail.label }}:</span>
+                  {{ detail.text }}
+                </p>
+              </div>
+            </template>
+          </StatTooltip>
         </div>
       </div>
 
@@ -58,8 +66,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import CardFrame from './CardFrame.vue'
+import StatTooltip from './StatTooltip.vue'
 import { characterStore } from '../stores/characterStore.js'
 
 // Initialize conditions array if not exists
@@ -86,23 +94,87 @@ const conditionLabels = {
   concentrating: 'Concentrating'
 }
 
-const conditionDescriptions = {
-  blinded: 'Unable to see. Disadvantage on attack rolls, attackers have advantage.',
-  charmed: 'Friendly to the charmer. Cannot attack charmer. Charm aware when spell ends.',
-  deafened: 'Cannot hear. Automatically fails checks that rely on hearing.',
-  exhaustion: 'Gain 1 level. 6 levels = death. DC 10 CON save when exposed.',
-  frightened: 'Disadvantage on attack rolls and ability checks while source visible.',
-  grappled: 'Speed 0. Cannot benefit from speed increases. Escape DC 8 + DEX or STR.',
-  incapacitated: 'Cannot take actions or reactions.',
-  invisible: 'Unseen. Advantage on attack rolls. Attackers have disadvantage.',
-  paralyzed: 'Incapacitated. Critical hit on first attack. Speed 0.',
-  petrified: 'Incapacitated. Resistance to all damage. Immune to poison/disease.',
-  poisoned: 'Disadvantage on attack rolls and ability checks.',
-  prone: 'Melee within 5ft hit with advantage, ranged disadvantage. 0 movement.',
-  restrained: 'Speed 0. Disadvantage on attack rolls. Advantage to attack you.',
-  stunned: 'Incapacitated. Cannot move. Speech unintelligible.',
-  unconscious: 'Incapacitated. Cannot move/speak. Unaware. At 0 HP. Critical hit = auto-fail.',
-  concentrating: 'Maintaining spell concentration. Losing HP forces CON save or loses spell.'
+const conditionDetails = {
+  blinded: [
+    { label: 'Your Attacks', text: 'You have disadvantage on attack rolls.' },
+    { label: 'Being Attacked', text: 'Attack rolls against you have advantage.' },
+    { label: 'Ability Checks', text: 'You automatically fail any check that requires sight.' },
+  ],
+  charmed: [
+    { label: 'Restrictions', text: "You can't attack the charmer or target them with harmful abilities or effects." },
+    { label: 'Social', text: 'The charmer has advantage on ability checks to interact with you socially.' },
+    { label: 'Awareness', text: 'You know you were charmed once the condition ends.' },
+  ],
+  deafened: [
+    { label: 'Hearing', text: "You can't hear anything." },
+    { label: 'Ability Checks', text: 'You automatically fail ability checks that require hearing.' },
+  ],
+  exhaustion: [
+    { label: 'D20 Tests', text: 'You have disadvantage on D20 Tests equal to your Exhaustion level (levels 1–4).' },
+    { label: 'Speed (level 5)', text: 'At Exhaustion 5, your Speed drops to 0.' },
+    { label: 'Death (level 6)', text: 'At Exhaustion 6, you die.' },
+    { label: 'Recovery', text: 'You lose 1 level of Exhaustion when you finish a Long Rest.' },
+  ],
+  frightened: [
+    { label: 'Disadvantage', text: 'You have disadvantage on ability checks and attack rolls while you can see the source of your fear.' },
+    { label: 'Movement', text: "You can't willingly move closer to the source of your fear." },
+  ],
+  grappled: [
+    { label: 'Speed', text: "Your speed becomes 0 and can't increase." },
+    { label: 'Escape', text: "You can use an action to escape: DC 8 + the grappler's STR or DEX modifier + proficiency bonus." },
+    { label: 'Ends When', text: "The condition ends if the grappler is incapacitated, or if you're moved beyond their reach." },
+  ],
+  incapacitated: [
+    { label: 'Actions', text: "You can't take actions." },
+    { label: 'Reactions', text: "You can't take reactions." },
+  ],
+  invisible: [
+    { label: 'Your Attacks', text: 'Your attack rolls have advantage.' },
+    { label: 'Being Attacked', text: 'Attack rolls against you have disadvantage.' },
+    { label: 'Detection', text: "You can't be seen without special magic. You still make noise and leave tracks." },
+  ],
+  paralyzed: [
+    { label: 'Incapacitated', text: "You're incapacitated (no actions or reactions) and can't move or speak." },
+    { label: 'Saving Throws', text: 'You automatically fail STR and DEX saving throws.' },
+    { label: 'Attack Rolls', text: 'Attack rolls against you have advantage. Any hit within 5 feet is a critical hit.' },
+  ],
+  petrified: [
+    { label: 'Incapacitated', text: "You're incapacitated, can't move or speak, and are unaware of your surroundings." },
+    { label: 'Damage', text: 'You have resistance to all damage.' },
+    { label: 'Immunity', text: "You're immune to poison and disease; existing ones are suspended." },
+    { label: 'Saving Throws', text: 'You automatically fail STR and DEX saving throws. Attack rolls against you have advantage.' },
+  ],
+  poisoned: [
+    { label: 'Attack Rolls', text: 'You have disadvantage on attack rolls.' },
+    { label: 'Ability Checks', text: 'You have disadvantage on ability checks.' },
+  ],
+  prone: [
+    { label: 'Movement', text: 'Your only movement option is to crawl (1 extra foot per foot moved) unless you stand up (costs half your speed).' },
+    { label: 'Melee Attacks', text: 'Melee attack rolls against you have advantage. Ranged attack rolls have disadvantage.' },
+    { label: 'Your Attacks', text: 'Your attack rolls have disadvantage.' },
+  ],
+  restrained: [
+    { label: 'Speed', text: "Your speed becomes 0 and can't increase." },
+    { label: 'Attack Rolls', text: 'Attack rolls against you have advantage. Your attack rolls have disadvantage.' },
+    { label: 'Saving Throws', text: 'You have disadvantage on DEX saving throws.' },
+  ],
+  stunned: [
+    { label: 'Incapacitated', text: "You're incapacitated (no actions or reactions) and can't move." },
+    { label: 'Speech', text: 'You can only speak falteringly.' },
+    { label: 'Saving Throws', text: 'You automatically fail STR and DEX saving throws. Attack rolls against you have advantage.' },
+  ],
+  unconscious: [
+    { label: 'Incapacitated', text: "You're incapacitated, can't move or speak, and are unaware of your surroundings." },
+    { label: 'Drops', text: "You drop everything you're holding and fall Prone." },
+    { label: 'Critical Hits', text: 'Attack rolls against you have advantage. Any hit within 5 feet is a critical hit.' },
+    { label: 'Saving Throws', text: 'You automatically fail STR and DEX saving throws.' },
+  ],
+  concentrating: [
+    { label: 'Taking Damage', text: 'When you take damage, make a CON save (DC = half damage taken, minimum 10) or lose concentration.' },
+    { label: 'Incapacitation', text: 'If you become incapacitated or die, concentration ends immediately.' },
+    { label: 'New Spell', text: 'Casting another concentration spell automatically ends this one.' },
+    { label: 'Duration', text: 'Spells can require up to 1 minute, 10 minutes, or 1 hour of concentration.' },
+  ],
 }
 
 const hasCondition = (condition) => {
@@ -124,4 +196,29 @@ const clearAllConditions = () => {
 </script>
 
 <style scoped>
+.condition-help-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--theme-primary, #D4AF37);
+  color: var(--theme-primary, #D4AF37);
+  font-size: 0.65rem;
+  font-weight: bold;
+  cursor: help;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.condition-help-btn:hover {
+  opacity: 1;
+}
+
+.condition-emphasis {
+  color: var(--theme-primary);
+}
 </style>

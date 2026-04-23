@@ -55,7 +55,7 @@
     <div v-if="rollHistory.length > 0" class="mt-4 border-t border-slate-700 pt-3">
       <div class="text-xs text-gold-400 font-bold uppercase mb-2">Recent Rolls</div>
       <div class="space-y-1 max-h-24 overflow-y-auto text-xs">
-        <div v-for="(roll, idx) in rollHistory.slice().reverse()" :key="idx" class="text-gray-400">
+        <div v-for="(roll, idx) in rollHistory" :key="idx" class="text-gray-400">
           {{ roll.label }}: <span class="font-bold text-gold-300">{{ roll.total }}</span>
           <span class="text-gray-600 ml-1">({{ roll.d20 }}{{ roll.bonus >= 0 ? '+' : '' }}{{ roll.bonus }})</span>
         </div>
@@ -66,7 +66,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { characterStore } from '../stores/characterStore.js'
+import { characterStore, recordRoll } from '../stores/characterStore.js'
 import { rollDice } from '../utils/diceRoller.js'
 import StatTooltip from './StatTooltip.vue'
 
@@ -75,7 +75,9 @@ const store = characterStore
 const rollType = ref('attack')
 const selectedOption = ref('spell')
 const lastRoll = ref(null)
-const rollHistory = ref([])
+
+// Use the shared store history so RollStats stays in sync
+const rollHistory = computed(() => characterStore.rollHistory?.slice(-10).reverse() ?? [])
 
 const getMod = (ability) => Math.floor((store.abilities[ability] - 10) / 2)
 
@@ -136,10 +138,9 @@ const performRoll = () => {
   const typeSuffix = rollType.value === 'attack' ? '' : rollType.value === 'save' ? '' : ' Check'
   const label = `${baseName}${typeSuffix}`
 
-  const roll = { d20, bonus, total, label }
+  const roll = { d20, bonus, total, label, type: rollType.value }
   lastRoll.value = roll
-  rollHistory.value.push(roll)
-  if (rollHistory.value.length > 10) rollHistory.value.shift()
+  recordRoll(roll)
 }
 </script>
 

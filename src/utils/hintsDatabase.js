@@ -55,7 +55,7 @@ export const hintsDatabase = {
       {
         id: 'overview_mechanics_1',
         title: 'Understanding Ability Modifiers',
-        content: 'Your ability modifier = (Ability Score - 10) ÷ 2. STR 12 = +1, WIS 17 = +3. These modifiers apply to attacks, saves, and checks.',
+        content: 'Your ability modifier = (Ability Score - 10) ÷ 2. STR 10 = +0, WIS 17 = +3. These modifiers apply to attacks, saves, and checks.',
         category: 'mechanics',
         difficulty: 'beginner',
         condition: (store) => true
@@ -71,7 +71,7 @@ export const hintsDatabase = {
       {
         id: 'overview_mechanics_3',
         title: 'AC Calculation Explained',
-        content: 'Your AC 19 = 10 (base) + 5 (plate armor) + 2 (shield) + 2 (Dex mod cap). Higher AC makes you harder to hit. Your armor choice determines most of this.',
+        content: 'Your AC 19 = 15 (Half Plate) + 2 (DEX mod cap) + 2 (shield). Higher AC makes you harder to hit. Half Plate is the best medium armor and matches your DEX perfectly.',
         category: 'mechanics',
         difficulty: 'intermediate',
         condition: (store) => store.ac >= 18
@@ -105,10 +105,10 @@ export const hintsDatabase = {
       {
         id: 'overview_critical_1',
         title: 'Character Survival Tips',
-        content: 'You have 43 HP with 16 CON. You\'re fairly durable for a cleric, but avoid being the tank. Keep 1-2 allies healed and alert enemies to your support role.',
+        content: 'You have 38 HP with 14 CON. You\'re reasonably durable for a cleric, but avoid being the tank. Keep 1-2 allies healed and let your CON +2 carry concentration saves.',
         category: 'critical',
         difficulty: 'intermediate',
-        condition: (store) => store.hitPoints?.max >= 40
+        condition: (store) => store.hitPoints?.max >= 35
       },
       {
         id: 'overview_critical_2',

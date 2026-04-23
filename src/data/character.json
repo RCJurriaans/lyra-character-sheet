@@ -7,16 +7,16 @@
   "alignment": "Chaotic Good",
   "background": "Faction Agent (Wayfarer's Concord)",
   "abilities": {
-    "str": 12,
+    "str": 10,
     "dex": 14,
-    "con": 16,
+    "con": 14,
     "int": 8,
     "wis": 17,
     "cha": 12
   },
   "hitPoints": {
-    "current": 43,
-    "max": 43,
+    "current": 38,
+    "max": 38,
     "temporary": 0
   },
   "ac": 19,
@@ -42,9 +42,9 @@
     "max": 25
   },
   "savingThrows": {
-    "str": 1,
+    "str": 0,
     "dex": 2,
-    "con": 3,
+    "con": 2,
     "int": -1,
     "wis": 6,
     "cha": 4
@@ -53,7 +53,7 @@
     "acrobatics": { "mod": 2, "proficient": false },
     "animalHandling": { "mod": 3, "proficient": false },
     "arcana": { "mod": -1, "proficient": false },
-    "athletics": { "mod": 1, "proficient": false },
+    "athletics": { "mod": 0, "proficient": false },
     "deception": { "mod": 1, "proficient": false },
     "history": { "mod": -1, "proficient": false },
     "insight": { "mod": 6, "proficient": true },

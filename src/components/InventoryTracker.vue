@@ -23,46 +23,75 @@
       </div>
 
       <!-- Item Cards Grid -->
-      <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 max-h-96 overflow-y-auto pr-1">
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 max-h-[520px] overflow-y-auto pr-1">
         <div
           v-for="(item, idx) in filteredEquipment"
           :key="idx"
-          class="bg-slate-700 rounded-lg p-3 border border-slate-600 hover:border-gold-400/60 transition-colors flex flex-col gap-2 min-h-[100px]"
+          class="bg-slate-700 rounded-lg border transition-colors flex flex-col"
+          :class="expandedItem === realIndex(item) ? 'border-gold-400 col-span-2 lg:col-span-3' : 'border-slate-600 hover:border-gold-400/60'"
         >
-          <!-- Top: type badge + delete -->
-          <div class="flex items-start justify-between gap-1">
-            <span
-              class="text-xs font-medium px-1.5 py-0.5 rounded leading-tight"
-              :class="typeBadgeClass(item.type)"
-            >
-              {{ typeIcon(item.type) }} {{ item.type }}
-            </span>
-            <button
-              @click="removeItem(idx)"
-              class="text-red-400 hover:text-red-300 text-xs opacity-60 hover:opacity-100 shrink-0"
-              title="Remove item"
-            >✕</button>
-          </div>
+          <!-- Card top (always visible) -->
+          <div class="p-3 flex flex-col gap-2" :class="expandedItem === realIndex(item) ? 'flex-row items-start' : ''">
 
-          <!-- Item Name -->
-          <div class="text-sm font-semibold text-gray-100 leading-tight flex-1">{{ item.name }}</div>
+            <!-- Collapsed layout -->
+            <template v-if="expandedItem !== realIndex(item)">
+              <div class="flex items-start justify-between gap-1">
+                <span class="text-xs font-medium px-1.5 py-0.5 rounded leading-tight" :class="typeBadgeClass(item.type)">
+                  {{ typeIcon(item.type) }} {{ item.type }}
+                </span>
+                <div class="flex gap-1 shrink-0">
+                  <button
+                    v-if="item.description || knownDescriptions[item.name]"
+                    @click="toggleExpand(realIndex(item))"
+                    class="text-gold-400 hover:text-gold-300 text-xs opacity-70 hover:opacity-100"
+                    title="View description"
+                  >ℹ</button>
+                  <button
+                    @click="removeItem(idx)"
+                    class="text-red-400 hover:text-red-300 text-xs opacity-60 hover:opacity-100"
+                    title="Remove item"
+                  >✕</button>
+                </div>
+              </div>
+              <div class="text-sm font-semibold text-gray-100 leading-tight flex-1">{{ item.name }}</div>
+              <div class="text-xs text-gray-500">{{ item.weight > 0 ? `${item.weight} lb` : '— lb' }}</div>
+              <div class="flex items-center gap-1">
+                <button @click="decrementQuantity(idx)" class="btn btn-secondary px-2 py-0.5 text-xs flex-none">−</button>
+                <span class="flex-1 text-center text-sm font-bold text-gold-300">{{ item.quantity }}</span>
+                <button @click="incrementQuantity(idx)" class="btn btn-secondary px-2 py-0.5 text-xs flex-none">+</button>
+              </div>
+            </template>
 
-          <!-- Weight -->
-          <div class="text-xs text-gray-500">
-            {{ item.weight > 0 ? `${item.weight} lb` : '— lb' }}
-          </div>
+            <!-- Expanded layout (full-width row) -->
+            <template v-else>
+              <div class="flex items-start justify-between gap-3 w-full">
+                <!-- Left: name + meta -->
+                <div class="flex flex-col gap-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-xs font-medium px-1.5 py-0.5 rounded" :class="typeBadgeClass(item.type)">
+                      {{ typeIcon(item.type) }} {{ item.type }}
+                    </span>
+                    <span class="text-xs text-gray-500">{{ item.weight > 0 ? `${item.weight} lb` : '— lb' }}</span>
+                  </div>
+                  <div class="text-base font-bold text-gold-300">{{ item.name }}</div>
+                  <!-- Description -->
+                  <div class="text-sm text-gray-300 leading-relaxed mt-1 whitespace-pre-wrap">{{ item.description || knownDescriptions[item.name] }}</div>
+                </div>
 
-          <!-- Quantity Controls -->
-          <div class="flex items-center gap-1">
-            <button
-              @click="decrementQuantity(idx)"
-              class="btn btn-secondary px-2 py-0.5 text-xs flex-none"
-            >−</button>
-            <span class="flex-1 text-center text-sm font-bold text-gold-300">{{ item.quantity }}</span>
-            <button
-              @click="incrementQuantity(idx)"
-              class="btn btn-secondary px-2 py-0.5 text-xs flex-none"
-            >+</button>
+                <!-- Right: controls -->
+                <div class="flex flex-col items-end gap-2 shrink-0">
+                  <div class="flex gap-1">
+                    <button @click="toggleExpand(realIndex(item))" class="text-gold-400 hover:text-gold-300 text-xs">✕ close</button>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button @click="decrementQuantity(idx)" class="btn btn-secondary px-2 py-0.5 text-xs">−</button>
+                    <span class="w-8 text-center text-sm font-bold text-gold-300">{{ item.quantity }}</span>
+                    <button @click="incrementQuantity(idx)" class="btn btn-secondary px-2 py-0.5 text-xs">+</button>
+                  </div>
+                  <button @click="removeItem(idx)" class="text-red-400 hover:text-red-300 text-xs">✕ remove</button>
+                </div>
+              </div>
+            </template>
           </div>
         </div>
 
@@ -86,35 +115,25 @@
           @keydown.enter="addItem"
         />
         <div class="grid grid-cols-3 gap-2">
-          <select
-            v-model="newItem.type"
-            class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm"
-          >
+          <select v-model="newItem.type" class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm">
             <option value="weapon">Weapon</option>
             <option value="armor">Armor</option>
             <option value="tool">Tool</option>
             <option value="consumable">Consumable</option>
             <option value="misc">Miscellaneous</option>
           </select>
-          <input
-            v-model.number="newItem.quantity"
-            type="number"
-            min="1"
-            placeholder="Qty"
-            class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm"
-          />
-          <input
-            v-model.number="newItem.weight"
-            type="number"
-            min="0"
-            step="0.5"
-            placeholder="Weight"
-            class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm"
-          />
+          <input v-model.number="newItem.quantity" type="number" min="1" placeholder="Qty"
+            class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm" />
+          <input v-model.number="newItem.weight" type="number" min="0" step="0.5" placeholder="lb"
+            class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm" />
         </div>
-        <button @click="addItem" class="btn btn-gold w-full text-sm">
-          Add Item
-        </button>
+        <textarea
+          v-model="newItem.description"
+          placeholder="Description (optional)..."
+          class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm resize-none"
+          rows="2"
+        />
+        <button @click="addItem" class="btn btn-gold w-full text-sm">Add Item</button>
       </div>
 
       <!-- Total Weight -->
@@ -131,35 +150,65 @@ import { ref, computed, reactive } from 'vue'
 import CardFrame from './CardFrame.vue'
 import { characterStore } from '../stores/characterStore.js'
 
+// D&D 2024 descriptions sourced from dnd2024.wikidot.com
+const knownDescriptions = {
+  'Mace':
+    'Simple Melee Weapon | 1d6 Bludgeoning | No properties\n5 GP · 4 lb.',
+
+  'Shield':
+    'Armor | AC +2 | Don/Doff: Utilize Action\n10 GP · 6 lb.\n\nYou gain the Armor Class benefit of a Shield only if you have training with it. A creature can wield only one Shield at a time.',
+
+  'Plate Armor':
+    'Heavy Armor | AC 18 | Requires Str 15 | Stealth: Disadvantage\n1,500 GP · 65 lb.',
+
+  'Holy Symbol (Amulet)':
+    'Spellcasting Focus | 5 GP\n\nA Holy Symbol is bejeweled or painted to channel divine magic. A Cleric or Paladin can use a Holy Symbol as a Spellcasting Focus.',
+
+  "Healer's Kit":
+    'Tool | 10 uses | 5 GP · 3 lb.\n\nA Healer\'s Kit has ten uses. As a Utilize action, you can expend one of its uses to stabilize an Unconscious creature that has 0 Hit Points without needing to make a Wisdom (Medicine) check.',
+
+  'Backpack':
+    'Adventuring Gear | 2 GP · 5 lb.\n\nA Backpack holds up to 30 pounds within 1 cubic foot. It can also serve as a saddlebag.',
+
+  'Bedroll':
+    'Adventuring Gear | 1 GP · 7 lb.\n\nA Bedroll sleeps one Small or Medium creature. While in a Bedroll, you automatically succeed on saving throws against extreme cold.',
+
+  'Waterskin':
+    'Adventuring Gear | 2 SP · 5 lb.\n\nA Waterskin holds up to 4 pints. If you don\'t drink sufficient water, you risk dehydration.',
+
+  'Torch':
+    'Adventuring Gear | 1 CP · 1 lb.\n\nA Torch burns for 1 hour, casting Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. When you take the Attack action, you can attack with the Torch as a Simple Melee weapon. On a hit, the target takes 1 Fire damage.',
+
+  'Rope (50 ft)':
+    'Adventuring Gear | 1 GP · 5 lb.\n\nAs a Utilize action, you can tie a knot with Rope if you succeed on a DC 10 Dexterity (Sleight of Hand) check. The Rope can be burst with a DC 20 Strength (Athletics) check. You can bind an unwilling creature only if it has the Grappled, Incapacitated, or Restrained condition. Escaping requires a DC 15 Dexterity (Acrobatics) check as an action.',
+
+  'Rations':
+    'Adventuring Gear (Consumable) | 5 SP · 2 lb. per day\n\nRations consist of travel-ready food, including jerky, dried fruit, hardtack, and nuts. See the Malnutrition rules for the risks of not eating.',
+}
+
 // Initialize equipment if not exists
 if (!characterStore.equipment) {
   characterStore.equipment = [
-    { name: 'Mace', type: 'weapon', quantity: 1, weight: 4 },
-    { name: 'Shield', type: 'armor', quantity: 1, weight: 6 },
-    { name: 'Plate Armor', type: 'armor', quantity: 1, weight: 65 },
-    { name: 'Holy Symbol (Amulet)', type: 'tool', quantity: 1, weight: 0 },
-    { name: "Healer's Kit", type: 'tool', quantity: 1, weight: 3 },
-    { name: 'Backpack', type: 'misc', quantity: 1, weight: 5 },
-    { name: 'Bedroll', type: 'misc', quantity: 1, weight: 5 },
-    { name: 'Waterskin', type: 'misc', quantity: 2, weight: 1 },
-    { name: 'Torch', type: 'misc', quantity: 5, weight: 5 },
-    { name: 'Rope (50 ft)', type: 'misc', quantity: 1, weight: 10 },
-    { name: 'Rations', type: 'consumable', quantity: 20, weight: 20 }
+    { name: 'Mace',               type: 'weapon',    quantity: 1,  weight: 4  },
+    { name: 'Shield',             type: 'armor',     quantity: 1,  weight: 6  },
+    { name: 'Plate Armor',        type: 'armor',     quantity: 1,  weight: 65 },
+    { name: 'Holy Symbol (Amulet)', type: 'tool',    quantity: 1,  weight: 0  },
+    { name: "Healer's Kit",       type: 'tool',      quantity: 1,  weight: 3  },
+    { name: 'Backpack',           type: 'misc',      quantity: 1,  weight: 5  },
+    { name: 'Bedroll',            type: 'misc',      quantity: 1,  weight: 5  },
+    { name: 'Waterskin',          type: 'misc',      quantity: 2,  weight: 1  },
+    { name: 'Torch',              type: 'misc',      quantity: 5,  weight: 1  },
+    { name: 'Rope (50 ft)',       type: 'misc',      quantity: 1,  weight: 10 },
+    { name: 'Rations',            type: 'consumable',quantity: 20, weight: 2  },
   ]
 }
 
 const searchQuery = ref('')
 const filterType = ref('')
-const newItem = reactive({ name: '', type: 'misc', quantity: 1, weight: 0 })
+const expandedItem = ref(null)
+const newItem = reactive({ name: '', type: 'misc', quantity: 1, weight: 0, description: '' })
 
-const typeIcon = (type) => ({
-  weapon: '⚔️',
-  armor: '🛡️',
-  tool: '🔧',
-  consumable: '🧪',
-  misc: '📦'
-}[type] || '📦')
-
+const typeIcon = (type) => ({ weapon: '⚔️', armor: '🛡️', tool: '🔧', consumable: '🧪', misc: '📦' }[type] || '📦')
 const typeBadgeClass = (type) => ({
   weapon: 'bg-red-900/50 text-red-300',
   armor: 'bg-blue-900/50 text-blue-300',
@@ -168,11 +217,16 @@ const typeBadgeClass = (type) => ({
   misc: 'bg-slate-600 text-gray-300'
 }[type] || 'bg-slate-600 text-gray-300')
 
+// Get the real index in characterStore.equipment for an item object
+const realIndex = (item) => characterStore.equipment.indexOf(item)
+
+const toggleExpand = (realIdx) => {
+  expandedItem.value = expandedItem.value === realIdx ? null : realIdx
+}
+
 const filteredEquipment = computed(() => {
   let items = characterStore.equipment
-  if (filterType.value) {
-    items = items.filter(i => i.type === filterType.value)
-  }
+  if (filterType.value) items = items.filter(i => i.type === filterType.value)
   if (searchQuery.value) {
     const q = searchQuery.value.toLowerCase()
     items = items.filter(i => i.name.toLowerCase().includes(q) || i.type.toLowerCase().includes(q))
@@ -190,33 +244,36 @@ const addItem = () => {
       name: newItem.name.trim(),
       type: newItem.type,
       quantity: newItem.quantity,
-      weight: newItem.weight
+      weight: newItem.weight,
+      description: newItem.description.trim()
     })
     newItem.name = ''
     newItem.type = 'misc'
     newItem.quantity = 1
     newItem.weight = 0
+    newItem.description = ''
   }
 }
 
 const incrementQuantity = (idx) => {
   const item = filteredEquipment.value[idx]
-  const realIdx = characterStore.equipment.indexOf(item)
-  if (realIdx > -1) characterStore.equipment[realIdx].quantity++
+  const ri = characterStore.equipment.indexOf(item)
+  if (ri > -1) characterStore.equipment[ri].quantity++
 }
 
 const decrementQuantity = (idx) => {
   const item = filteredEquipment.value[idx]
-  const realIdx = characterStore.equipment.indexOf(item)
-  if (realIdx > -1 && characterStore.equipment[realIdx].quantity > 1) {
-    characterStore.equipment[realIdx].quantity--
-  }
+  const ri = characterStore.equipment.indexOf(item)
+  if (ri > -1 && characterStore.equipment[ri].quantity > 1) characterStore.equipment[ri].quantity--
 }
 
 const removeItem = (idx) => {
   const item = filteredEquipment.value[idx]
-  const realIdx = characterStore.equipment.indexOf(item)
-  if (realIdx > -1) characterStore.equipment.splice(realIdx, 1)
+  const ri = characterStore.equipment.indexOf(item)
+  if (ri > -1) {
+    if (expandedItem.value === ri) expandedItem.value = null
+    characterStore.equipment.splice(ri, 1)
+  }
 }
 </script>
 

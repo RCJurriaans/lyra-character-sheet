@@ -8,7 +8,14 @@
           <input
             v-model="newNPCName"
             type="text"
-            placeholder="NPC name..."
+            placeholder="Name..."
+            class="flex-1 bg-slate-600 border border-slate-500 rounded px-2 py-1 text-sm text-gray-100"
+            @keydown.enter="addNPC"
+          />
+          <input
+            v-model="newNPCRole"
+            type="text"
+            placeholder="Role (optional)..."
             class="flex-1 bg-slate-600 border border-slate-500 rounded px-2 py-1 text-sm text-gray-100"
             @keydown.enter="addNPC"
           />
@@ -29,8 +36,11 @@
             @click="toggleNPC(idx)"
             class="flex items-center gap-2 p-3 bg-slate-700 hover:bg-slate-600 cursor-pointer transition-colors select-none"
           >
-            <span class="text-gold-400 text-sm font-semibold flex-1">{{ npc.name }}</span>
-            <span class="text-xs text-gray-400">{{ npc.notes.length }} note{{ npc.notes.length !== 1 ? 's' : '' }}</span>
+            <div class="flex-1 min-w-0">
+              <div class="text-gold-400 text-sm font-semibold truncate">{{ npc.name }}</div>
+              <div v-if="npc.role" class="text-xs text-gray-400 truncate">{{ npc.role }}</div>
+            </div>
+            <span class="text-xs text-gray-400 shrink-0">{{ npc.notes.length }} note{{ npc.notes.length !== 1 ? 's' : '' }}</span>
             <span class="text-xs text-gray-500 ml-1">{{ expandedNPC === idx ? '▲' : '▼' }}</span>
             <button
               @click.stop="deleteNPC(idx)"
@@ -41,6 +51,18 @@
 
           <!-- Expanded Content -->
           <div v-if="expandedNPC === idx" class="p-3 space-y-4 bg-slate-800">
+            <!-- Role -->
+            <div>
+              <div class="text-xs font-bold text-gold-400 mb-1">Role / Title</div>
+              <input
+                v-model="npc.role"
+                type="text"
+                placeholder="Mayor, Guard Captain, Innkeeper..."
+                class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1.5 text-sm text-gray-100"
+                @input="saveNPCs"
+              />
+            </div>
+
             <!-- Bio -->
             <div>
               <div class="text-xs font-bold text-gold-400 mb-1">Bio / Description</div>
@@ -119,8 +141,14 @@ if (!characterStore.npcs) {
   characterStore.npcs = []
 }
 
+// Migrate: add role field to existing NPCs that don't have it
+characterStore.npcs.forEach(npc => {
+  if (npc.role === undefined) npc.role = ''
+})
+
 const npcs = characterStore.npcs
 const newNPCName = ref('')
+const newNPCRole = ref('')
 const expandedNPC = ref(null)
 const newNPCNotes = reactive({})
 
@@ -130,10 +158,12 @@ const addNPC = () => {
   if (newNPCName.value.trim()) {
     npcs.push({
       name: newNPCName.value.trim(),
+      role: newNPCRole.value.trim(),
       bio: '',
       notes: []
     })
     newNPCName.value = ''
+    newNPCRole.value = ''
     saveCharacterState(characterStore)
     // Auto-expand the new NPC
     expandedNPC.value = npcs.length - 1

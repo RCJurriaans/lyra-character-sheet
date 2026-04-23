@@ -108,7 +108,7 @@
 <script setup>
 import { ref, computed, reactive } from 'vue'
 import CardFrame from './CardFrame.vue'
-import { characterStore } from '../stores/characterStore.js'
+import { characterStore, saveCharacterState } from '../stores/characterStore.js'
 
 // D&D 2024 descriptions sourced from dnd2024.wikidot.com
 const knownDescriptions = {
@@ -148,12 +148,15 @@ const knownDescriptions = {
 
 // Migrate: replace incorrectly set Plate Armor with Half Plate Armor
 if (characterStore.equipment) {
+  let migrated = false
   characterStore.equipment.forEach(item => {
     if (item.name === 'Plate Armor' && item.type === 'armor') {
       item.name = 'Half Plate Armor'
       item.weight = 40
+      migrated = true
     }
   })
+  if (migrated) saveCharacterState(characterStore)
 }
 
 // Initialize equipment if not exists
@@ -214,25 +217,35 @@ const addItem = () => {
     newItem.quantity = 1
     newItem.weight = 0
     newItem.description = ''
+    saveCharacterState(characterStore)
   }
 }
 
 const incrementQuantity = (idx) => {
   const item = filteredEquipment.value[idx]
   const ri = characterStore.equipment.indexOf(item)
-  if (ri > -1) characterStore.equipment[ri].quantity++
+  if (ri > -1) {
+    characterStore.equipment[ri].quantity++
+    saveCharacterState(characterStore)
+  }
 }
 
 const decrementQuantity = (idx) => {
   const item = filteredEquipment.value[idx]
   const ri = characterStore.equipment.indexOf(item)
-  if (ri > -1 && characterStore.equipment[ri].quantity > 1) characterStore.equipment[ri].quantity--
+  if (ri > -1 && characterStore.equipment[ri].quantity > 1) {
+    characterStore.equipment[ri].quantity--
+    saveCharacterState(characterStore)
+  }
 }
 
 const removeItem = (idx) => {
   const item = filteredEquipment.value[idx]
   const ri = characterStore.equipment.indexOf(item)
-  if (ri > -1) characterStore.equipment.splice(ri, 1)
+  if (ri > -1) {
+    characterStore.equipment.splice(ri, 1)
+    saveCharacterState(characterStore)
+  }
 }
 </script>
 

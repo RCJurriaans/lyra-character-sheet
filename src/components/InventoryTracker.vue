@@ -158,8 +158,8 @@ const knownDescriptions = {
   'Shield':
     'Armor | AC +2 | Don/Doff: Utilize Action\n10 GP · 6 lb.\n\nYou gain the Armor Class benefit of a Shield only if you have training with it. A creature can wield only one Shield at a time.',
 
-  'Plate Armor':
-    'Heavy Armor | AC 18 | Requires Str 15 | Stealth: Disadvantage\n1,500 GP · 65 lb.',
+  'Half Plate Armor':
+    'Medium Armor | AC 15 + DEX mod (max +2) | Stealth: Disadvantage\n750 GP · 40 lb.\n\nElaborate overlapping metal plates covering the upper body, with chain mail beneath. No Strength requirement. With DEX +2 and a Shield, gives AC 19.',
 
   'Holy Symbol (Amulet)':
     'Spellcasting Focus | 5 GP\n\nA Holy Symbol is bejeweled or painted to channel divine magic. A Cleric or Paladin can use a Holy Symbol as a Spellcasting Focus.',
@@ -186,12 +186,22 @@ const knownDescriptions = {
     'Adventuring Gear (Consumable) | 5 SP · 2 lb. per day\n\nRations consist of travel-ready food, including jerky, dried fruit, hardtack, and nuts. See the Malnutrition rules for the risks of not eating.',
 }
 
+// Migrate: replace incorrectly set Plate Armor with Half Plate Armor
+if (characterStore.equipment) {
+  characterStore.equipment.forEach(item => {
+    if (item.name === 'Plate Armor' && item.type === 'armor') {
+      item.name = 'Half Plate Armor'
+      item.weight = 40
+    }
+  })
+}
+
 // Initialize equipment if not exists
 if (!characterStore.equipment) {
   characterStore.equipment = [
     { name: 'Mace',               type: 'weapon',    quantity: 1,  weight: 4  },
     { name: 'Shield',             type: 'armor',     quantity: 1,  weight: 6  },
-    { name: 'Plate Armor',        type: 'armor',     quantity: 1,  weight: 65 },
+    { name: 'Half Plate Armor',   type: 'armor',     quantity: 1,  weight: 40 },
     { name: 'Holy Symbol (Amulet)', type: 'tool',    quantity: 1,  weight: 0  },
     { name: "Healer's Kit",       type: 'tool',      quantity: 1,  weight: 3  },
     { name: 'Backpack',           type: 'misc',      quantity: 1,  weight: 5  },

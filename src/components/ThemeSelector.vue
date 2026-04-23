@@ -2,13 +2,10 @@
   <div class="theme-selector">
     <button
       @click="showMenu = !showMenu"
-      :style="{
-        backgroundColor: theme.colors.primary,
-        color: theme.colors.background
-      }"
       class="theme-toggle-btn"
+      title="Change theme"
     >
-      🎨 {{ theme.name }}
+      🎨
     </button>
 
     <div v-if="showMenu" class="theme-menu">
@@ -48,17 +45,20 @@ const selectTheme = (themeName) => {
 }
 
 .theme-toggle-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  border: 2px solid transparent;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  border: 1px solid var(--theme-primary, #D4AF37);
+  background: transparent;
+  color: var(--theme-textSecondary, #8a7a6a);
   cursor: pointer;
+  opacity: 0.5;
   transition: all 0.2s;
 }
 
 .theme-toggle-btn:hover {
-  opacity: 0.9;
-  transform: scale(1.05);
+  opacity: 1;
+  background: var(--theme-surface, #2D3E47);
 }
 
 .theme-menu {

@@ -7,6 +7,9 @@ const defaultState = structuredClone(characterData)
 
 export const characterStore = reactive(loadCharacterState(defaultState))
 
+// Re-export saveCharacterState for use in components
+export { saveCharacterState }
+
 // Computed properties
 export const abilityModifier = (ability) => {
   const score = characterStore.abilities[ability]

@@ -21,7 +21,7 @@
           <template #content>
             <div>
               <p class="mb-2"><span class="tooltip-emphasis font-bold">What it means:</span> How hard you are to hit in combat. Higher AC = harder to hit.</p>
-              <p class="mb-2"><span class="tooltip-emphasis font-bold">Calculation:</span> Base 10 + Armor bonus + Shield bonus + DEX modifier</p>
+              <p class="mb-2"><span class="tooltip-emphasis font-bold">Calculation:</span> Half Plate (15) + DEX cap (+2) + Shield (+2) = 19 AC. Note: medium armor caps DEX bonus at +2, which your DEX 14 hits exactly.</p>
               <p><span class="tooltip-emphasis font-bold">When to use:</span> Enemies roll d20 + their attack bonus and compare to your AC. If they meet or exceed it, they hit you.</p>
             </div>
           </template>

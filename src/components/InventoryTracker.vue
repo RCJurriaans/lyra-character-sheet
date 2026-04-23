@@ -113,7 +113,7 @@ import { characterStore, saveCharacterState } from '../stores/characterStore.js'
 // D&D 2024 descriptions sourced from dnd2024.wikidot.com
 const knownDescriptions = {
   'Mace':
-    'Simple Melee Weapon | 1d6 Bludgeoning | No properties\n5 GP · 4 lb.',
+    'Simple Melee Weapon | +3 to hit | 1d6+0 Bludgeoning damage\n5 GP · 4 lb.\n\nAttack bonus: STR (+0) + Proficiency (+3) = +3. Damage: 1d6 + STR (+0). No special properties.',
 
   'Shield':
     'Armor | AC +2 | Don/Doff: Utilize Action\n10 GP · 6 lb.\n\nYou gain the Armor Class benefit of a Shield only if you have training with it. A creature can wield only one Shield at a time.',

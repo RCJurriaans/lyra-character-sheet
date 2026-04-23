@@ -51,8 +51,8 @@ const selectedSpell = ref(null)
 const spells = [
   // Cantrips
   { name: 'Guidance', level: 'Cantrip', type: 'Enchantment', castingTime: '1 action', range: 'Touch', components: 'V,S', duration: '1 minute', description: 'One willing creature gets +1d4 to one ability check of its choice within 1 minute.' },
-  { name: 'Sacred Flame', level: 'Cantrip', type: 'Evocation', castingTime: '1 action', range: '60 feet', components: 'V,S', duration: 'Instantaneous', description: 'Radiant flame descends on creature. Dex save or take 2d8 radiant damage. No cover benefit.', damage: '2d8 radiant' },
-  { name: 'Toll the Dead', level: 'Cantrip', type: 'Necromancy', castingTime: '1 action', range: '60 feet', components: 'V,S', duration: 'Instantaneous', description: 'Creature makes Wis save or takes 2d8 necrotic damage (2d12 if missing HP).', damage: '2d8 or 2d12 necrotic' },
+  { name: 'Sacred Flame', level: 'Cantrip', type: 'Evocation', castingTime: '1 action', range: '60 feet', components: 'V,S', duration: 'Instantaneous', description: 'Target must succeed on a DC 14 DEX save or take 2d8 radiant damage. No benefit from cover.', damage: '2d8 radiant' },
+  { name: 'Toll the Dead', level: 'Cantrip', type: 'Necromancy', castingTime: '1 action', range: '60 feet', components: 'V,S', duration: 'Instantaneous', description: 'Target must succeed on a DC 14 WIS save or take 2d8 necrotic damage (2d12 if already missing any HP).', damage: '2d8 or 2d12 necrotic' },
   { name: 'Spare the Dying', level: 'Cantrip', type: 'Necromancy', castingTime: '1 action', range: 'Touch', components: 'V,S', duration: 'Instantaneous', description: 'Touch a dying creature and stabilize it. Does not restore HP.' },
 
   // 1st Level Domain Spells

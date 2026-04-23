@@ -107,43 +107,51 @@ const isProficientSave = (ability) => {
   return ability === 'wis' || ability === 'cha'
 }
 
+const sign = (n) => n >= 0 ? `+${n}` : `${n}`
+const calcMod = (abbr) => `(${store.abilities[abbr]} − 10) ÷ 2 = ${sign(getMod(abbr))}`
+
 const getAbilityTooltip = (abbr) => {
   const tooltips = {
     str: () => h('div', [
       h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'What it means: '), 'Physical power and athletic ability.']),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Attack rolls with melee weapons, Athletics checks, breaking things.']),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), `Modifier: ${getMod('str') >= 0 ? '+' : ''}${getMod('str')}`]),
-      h('p', [h('span', { class: 'text-gold-300 font-bold' }, 'Examples: '), 'Pushing a boulder, swinging an axe, grappling a foe.'])
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Attack rolls with melee weapons (Mace), Athletics checks, breaking things.']),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), calcMod('str')]),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Mace attack: '), `STR (${sign(getMod('str'))}) + PB (+${store.proficiencyBonus}) = ${sign(getMod('str') + store.proficiencyBonus)} to hit, 1d6${sign(getMod('str'))} damage`]),
+      h('p', [h('span', { class: 'text-gold-300 font-bold' }, 'Examples: '), 'Pushing a boulder, swinging your mace, grappling a foe.'])
     ]),
     dex: () => h('div', [
       h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'What it means: '), 'Agility, reflexes, and coordination.']),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Initiative, AC bonus, Acrobatics, Sleight of Hand, Stealth.']),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), `Modifier: ${getMod('dex') >= 0 ? '+' : ''}${getMod('dex')}`]),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Initiative, AC bonus (capped at +2 for medium armor), Acrobatics, Stealth.']),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), calcMod('dex')]),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'AC contribution: '), `DEX (${sign(getMod('dex'))}) capped at +2 by Half Plate — your DEX 14 hits the cap exactly.`]),
       h('p', [h('span', { class: 'text-gold-300 font-bold' }, 'Examples: '), 'Dodging attacks, sneaking past guards, catching a falling object.'])
     ]),
     con: () => h('div', [
       h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'What it means: '), 'Endurance, health, and vitality.']),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Determines Hit Points, concentration saving throws, endurance checks.']),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), `Modifier: ${getMod('con') >= 0 ? '+' : ''}${getMod('con')} (+ to HP per level)`]),
-      h('p', [h('span', { class: 'text-gold-300 font-bold' }, 'Examples: '), 'Holding your breath, resisting poison, maintaining concentration on spells.'])
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Hit Points, concentration saving throws (DC 10 or half damage taken).']),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), calcMod('con')]),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'HP: '), `Level 1: 8 + ${getMod('con')} = ${8 + getMod('con')}. Levels 2–5: (5 + ${getMod('con')}) × 4 = ${(5 + getMod('con')) * 4}. Total: ${store.hitPoints.max} HP.`]),
+      h('p', [h('span', { class: 'text-gold-300 font-bold' }, 'Examples: '), 'Holding your breath, resisting poison, maintaining Spirit Guardians concentration.'])
     ]),
     int: () => h('div', [
       h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'What it means: '), 'Reasoning, memory, and knowledge.']),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Arcana, History, Investigation, Nature, Religion checks.']),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), `Modifier: ${getMod('int') >= 0 ? '+' : ''}${getMod('int')}`]),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Arcana, History, Investigation, Nature, Religion checks. Your dump stat.']),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), calcMod('int')]),
       h('p', [h('span', { class: 'text-gold-300 font-bold' }, 'Examples: '), 'Recalling lore, understanding a puzzle, identifying magical effects.'])
     ]),
     wis: () => h('div', [
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'What it means: '), 'Awareness, insight, and intuition.']),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Your spellcasting ability! Also Insight, Medicine, Perception, Survival.']),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), `Modifier: ${getMod('wis') >= 0 ? '+' : ''}${getMod('wis')} (affects spell DC and attack rolls)`]),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'What it means: '), 'Awareness, insight, and intuition. Your most important stat.']),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Spellcasting ability — governs Spell DC, Spell Attack, and WIS-based skills.']),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), calcMod('wis')]),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Spellcasting: '), `Spell DC = 8 + WIS (${sign(getMod('wis'))}) + PB (+${store.proficiencyBonus}) = ${8 + getMod('wis') + store.proficiencyBonus}. Spell Attack = WIS (${sign(getMod('wis'))}) + PB (+${store.proficiencyBonus}) = ${sign(getMod('wis') + store.proficiencyBonus)}.`]),
       h('p', [h('span', { class: 'text-gold-300 font-bold' }, 'Examples: '), 'Noticing ambushes, reading emotions, detecting lies.'])
     ]),
     cha: () => h('div', [
       h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'What it means: '), 'Force of personality, charisma, and persuasiveness.']),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Deception, Insight, Intimidation, Performance, Persuasion.']),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), `Modifier: ${getMod('cha') >= 0 ? '+' : ''}${getMod('cha')}`]),
-      h('p', [h('span', { class: 'text-gold-300 font-bold' }, 'Examples: '), 'Persuading an NPC, intimidating enemies, performing on stage.'])
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Performance and Persuasion (proficient), Deception, Intimidation.']),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), calcMod('cha')]),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Proficient skills: '), `Performance & Persuasion: CHA (${sign(getMod('cha'))}) + PB (+${store.proficiencyBonus}) = ${sign(getMod('cha') + store.proficiencyBonus)}.`]),
+      h('p', [h('span', { class: 'text-gold-300 font-bold' }, 'Examples: '), 'Persuading an NPC, performing on stage, charming enemies.'])
     ])
   }
   return tooltips[abbr] || (() => h('div', 'Unknown ability'))

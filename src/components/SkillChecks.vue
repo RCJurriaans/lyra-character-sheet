@@ -45,7 +45,8 @@
           <template #content>
             <div>
               <p class="mb-1"><span class="text-gold-300 font-bold">What it's for:</span> {{ getSkillDescription(key) }}</p>
-              <p class="mb-1"><span class="text-gold-300 font-bold">Modifier:</span> {{ skill.mod >= 0 ? '+' : '' }}{{ skill.mod }}{{ skill.proficient ? ` (Proficient +${characterStore.proficiencyBonus})` : '' }}</p>
+              <p class="mb-1"><span class="text-gold-300 font-bold">Calculation:</span> {{ getSkillCalc(skill) }}</p>
+              <p v-if="skill.proficient" class="mb-1"><span class="text-gold-300 font-bold">Proficiency:</span> Yes ({{ skill.ability.toUpperCase() }} is your base, PB applies)</p>
               <p><span class="text-gold-300 font-bold">Example:</span> {{ getSkillExample(key) }}</p>
             </div>
           </template>
@@ -125,6 +126,17 @@ const skillExamples = {
 
 const getSkillDescription = (key) => skillDescriptions[key] || 'Unknown skill'
 const getSkillExample = (key) => skillExamples[key] || 'Unknown skill'
+
+const abilityLabels = { str: 'STR', dex: 'DEX', con: 'CON', int: 'INT', wis: 'WIS', cha: 'CHA' }
+const getSkillCalc = (skill) => {
+  const abilityMod = getAbilityMod(skill.ability)
+  const sign = (n) => (n >= 0 ? `+${n}` : `${n}`)
+  const base = `${abilityLabels[skill.ability]} modifier (${sign(abilityMod)})`
+  if (skill.proficient) {
+    return `${base} + Proficiency Bonus (${sign(characterStore.proficiencyBonus)}) = ${sign(skill.mod)}`
+  }
+  return `${base} = ${sign(abilityMod)}`
+}
 
 const getAbilityMod = (ability) => {
   return Math.floor((characterStore.abilities[ability] - 10) / 2)
@@ -236,8 +248,8 @@ const skillList = reactive({
   survival: {
     name: 'Survival (WIS)',
     ability: 'wis',
-    proficient: false,
-    mod: computed(() => getAbilityMod('wis'))
+    proficient: true, // From Cleric class
+    mod: computed(() => getAbilityMod('wis') + (skillList.survival.proficient ? characterStore.proficiencyBonus : 0))
   }
 })
 

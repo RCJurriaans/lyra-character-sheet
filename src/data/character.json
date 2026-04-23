@@ -67,7 +67,7 @@
     "religion": { "mod": -1, "proficient": false },
     "sleightOfHand": { "mod": 2, "proficient": false },
     "stealth": { "mod": 2, "proficient": false },
-    "survival": { "mod": 3, "proficient": false }
+    "survival": { "mod": 6, "proficient": true }
   },
   "languages": ["Common", "Sylvan", "Dwarvish", "Goblin"],
   "traits": {

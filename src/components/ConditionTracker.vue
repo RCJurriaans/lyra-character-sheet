@@ -68,7 +68,7 @@
 <script setup>
 import CardFrame from './CardFrame.vue'
 import StatTooltip from './StatTooltip.vue'
-import { characterStore } from '../stores/characterStore.js'
+import { characterStore, saveCharacterState } from '../stores/characterStore.js'
 
 // Initialize conditions array if not exists
 if (!characterStore.conditions) {
@@ -188,10 +188,12 @@ const toggleCondition = (condition) => {
   } else {
     characterStore.conditions.push(condition)
   }
+  saveCharacterState(characterStore)
 }
 
 const clearAllConditions = () => {
   characterStore.conditions = []
+  saveCharacterState(characterStore)
 }
 </script>
 

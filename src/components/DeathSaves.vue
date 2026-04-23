@@ -91,7 +91,7 @@
 <script setup>
 import { computed } from 'vue'
 import CardFrame from './CardFrame.vue'
-import { characterStore } from '../stores/characterStore.js'
+import { characterStore, saveCharacterState } from '../stores/characterStore.js'
 
 // Initialize death saves if not exists
 if (!characterStore.deathSaves) {
@@ -119,24 +119,19 @@ const statusMessage = computed(() => {
 })
 
 const toggleSuccess = (index) => {
-  if (index <= deathSaves.successes) {
-    deathSaves.successes = index - 1
-  } else {
-    deathSaves.successes = index
-  }
+  deathSaves.successes = index <= deathSaves.successes ? index - 1 : index
+  saveCharacterState(characterStore)
 }
 
 const toggleFailure = (index) => {
-  if (index <= deathSaves.failures) {
-    deathSaves.failures = index - 1
-  } else {
-    deathSaves.failures = index
-  }
+  deathSaves.failures = index <= deathSaves.failures ? index - 1 : index
+  saveCharacterState(characterStore)
 }
 
 const resetDeathSaves = () => {
   deathSaves.successes = 0
   deathSaves.failures = 0
+  saveCharacterState(characterStore)
 }
 </script>
 

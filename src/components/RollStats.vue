@@ -93,7 +93,7 @@
 <script setup>
 import { computed } from 'vue'
 import CardFrame from './CardFrame.vue'
-import { characterStore } from '../stores/characterStore.js'
+import { characterStore, clearRollHistory } from '../stores/characterStore.js'
 
 // Initialize roll history if not exists
 if (!characterStore.rollHistory) {
@@ -148,7 +148,7 @@ const recentRolls = computed(() => {
 
 const clearHistory = () => {
   if (confirm('Clear all roll history? This cannot be undone.')) {
-    characterStore.rollHistory = []
+    clearRollHistory()
   }
 }
 </script>

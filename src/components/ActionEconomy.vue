@@ -7,7 +7,7 @@
           <input
             type="checkbox"
             :checked="actions.actionUsed"
-            @change="actions.actionUsed = !actions.actionUsed"
+            @change="toggleAction"
             class="w-5 h-5 cursor-pointer"
           />
           <label class="flex-1 text-sm font-semibold cursor-pointer">Action</label>
@@ -29,7 +29,7 @@
           <input
             type="checkbox"
             :checked="actions.bonusActionUsed"
-            @change="actions.bonusActionUsed = !actions.bonusActionUsed"
+            @change="toggleBonusAction"
             class="w-5 h-5 cursor-pointer"
           />
           <label class="flex-1 text-sm font-semibold cursor-pointer">Bonus Action</label>
@@ -51,7 +51,7 @@
           <input
             type="checkbox"
             :checked="actions.reactionUsed"
-            @change="actions.reactionUsed = !actions.reactionUsed"
+            @change="toggleReaction"
             class="w-5 h-5 cursor-pointer"
           />
           <label class="flex-1 text-sm font-semibold cursor-pointer">Reaction</label>
@@ -117,31 +117,48 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
 import CardFrame from './CardFrame.vue'
 import StatTooltip from './StatTooltip.vue'
-import { characterStore } from '../stores/characterStore.js'
+import { characterStore, saveCharacterState } from '../stores/characterStore.js'
 
 // Initialize action economy if not exists
 if (!characterStore.actions) {
-  characterStore.actions = reactive({
+  characterStore.actions = {
     actionUsed: false,
     bonusActionUsed: false,
     reactionUsed: false,
     movementUsed: 0
-  })
+  }
+  saveCharacterState(characterStore)
 }
 
 const actions = characterStore.actions
 
+const toggleAction = () => {
+  actions.actionUsed = !actions.actionUsed
+  saveCharacterState(characterStore)
+}
+
+const toggleBonusAction = () => {
+  actions.bonusActionUsed = !actions.bonusActionUsed
+  saveCharacterState(characterStore)
+}
+
+const toggleReaction = () => {
+  actions.reactionUsed = !actions.reactionUsed
+  saveCharacterState(characterStore)
+}
+
 const moveDistance = (distance) => {
   if (actions.movementUsed + distance <= 35) {
     actions.movementUsed += distance
+    saveCharacterState(characterStore)
   }
 }
 
 const resetMovement = () => {
   actions.movementUsed = 0
+  saveCharacterState(characterStore)
 }
 
 const resetActionEconomy = () => {
@@ -149,6 +166,7 @@ const resetActionEconomy = () => {
   actions.bonusActionUsed = false
   actions.reactionUsed = false
   actions.movementUsed = 0
+  saveCharacterState(characterStore)
 }
 </script>
 

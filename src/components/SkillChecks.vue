@@ -75,7 +75,7 @@
 import { reactive, ref, computed } from 'vue'
 import CardFrame from './CardFrame.vue'
 import StatTooltip from './StatTooltip.vue'
-import { characterStore } from '../stores/characterStore.js'
+import { characterStore, recordRoll } from '../stores/characterStore.js'
 import { rollAbilityCheck } from '../utils/diceRoller.js'
 
 const lastRoll = ref(null)
@@ -250,17 +250,14 @@ const rollSkill = (key, skill) => {
   lastRoll.value = roll
   lastRollSkill.value = skill.name
 
-  // Add to roll history if using RollPanel
-  if (characterStore.rollHistory) {
-    characterStore.rollHistory.push({
-      d20: roll.d20,
-      modifier: totalMod,
-      total: roll.total,
-      type: 'skill',
-      skill: skill.name,
-      timestamp: new Date().toISOString()
-    })
-  }
+  recordRoll({
+    d20: roll.d20,
+    modifier: totalMod,
+    total: roll.total,
+    type: 'skill',
+    skill: skill.name,
+    timestamp: new Date().toISOString()
+  })
 }
 </script>
 

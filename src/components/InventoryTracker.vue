@@ -23,82 +23,42 @@
       </div>
 
       <!-- Item Cards Grid -->
-      <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 max-h-[520px] overflow-y-auto pr-1">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 max-h-[600px] overflow-y-auto pr-1">
         <div
           v-for="(item, idx) in filteredEquipment"
           :key="idx"
-          class="bg-slate-700 rounded-lg border transition-colors flex flex-col"
-          :class="expandedItem === realIndex(item) ? 'border-gold-400 col-span-2 lg:col-span-3' : 'border-slate-600 hover:border-gold-400/60'"
+          class="bg-slate-700 rounded-lg border border-slate-600 hover:border-gold-400/60 transition-colors flex flex-col gap-2 p-3"
         >
-          <!-- Card top (always visible) -->
-          <div class="p-3 flex flex-col gap-2" :class="expandedItem === realIndex(item) ? 'flex-row items-start' : ''">
-
-            <!-- Collapsed layout -->
-            <template v-if="expandedItem !== realIndex(item)">
-              <div class="flex items-start justify-between gap-1">
-                <span class="text-xs font-medium px-1.5 py-0.5 rounded leading-tight" :class="typeBadgeClass(item.type)">
-                  {{ typeIcon(item.type) }} {{ item.type }}
-                </span>
-                <div class="flex gap-1 shrink-0">
-                  <button
-                    v-if="item.description || knownDescriptions[item.name]"
-                    @click="toggleExpand(realIndex(item))"
-                    class="text-gold-400 hover:text-gold-300 text-xs opacity-70 hover:opacity-100"
-                    title="View description"
-                  >ℹ</button>
-                  <button
-                    @click="removeItem(idx)"
-                    class="text-red-400 hover:text-red-300 text-xs opacity-60 hover:opacity-100"
-                    title="Remove item"
-                  >✕</button>
-                </div>
-              </div>
-              <div class="text-sm font-semibold text-gray-100 leading-tight flex-1">{{ item.name }}</div>
-              <div class="text-xs text-gray-500">{{ item.weight > 0 ? `${item.weight} lb` : '— lb' }}</div>
-              <div class="flex items-center gap-1">
-                <button @click="decrementQuantity(idx)" class="btn btn-secondary px-2 py-0.5 text-xs flex-none">−</button>
-                <span class="flex-1 text-center text-sm font-bold text-gold-300">{{ item.quantity }}</span>
-                <button @click="incrementQuantity(idx)" class="btn btn-secondary px-2 py-0.5 text-xs flex-none">+</button>
-              </div>
-            </template>
-
-            <!-- Expanded layout (full-width row) -->
-            <template v-else>
-              <div class="flex items-start justify-between gap-3 w-full">
-                <!-- Left: name + meta -->
-                <div class="flex flex-col gap-1 min-w-0">
-                  <div class="flex items-center gap-2 flex-wrap">
-                    <span class="text-xs font-medium px-1.5 py-0.5 rounded" :class="typeBadgeClass(item.type)">
-                      {{ typeIcon(item.type) }} {{ item.type }}
-                    </span>
-                    <span class="text-xs text-gray-500">{{ item.weight > 0 ? `${item.weight} lb` : '— lb' }}</span>
-                  </div>
-                  <div class="text-base font-bold text-gold-300">{{ item.name }}</div>
-                  <!-- Description -->
-                  <div class="text-sm text-gray-300 leading-relaxed mt-1 whitespace-pre-wrap">{{ item.description || knownDescriptions[item.name] }}</div>
-                </div>
-
-                <!-- Right: controls -->
-                <div class="flex flex-col items-end gap-2 shrink-0">
-                  <div class="flex gap-1">
-                    <button @click="toggleExpand(realIndex(item))" class="text-gold-400 hover:text-gold-300 text-xs">✕ close</button>
-                  </div>
-                  <div class="flex items-center gap-1">
-                    <button @click="decrementQuantity(idx)" class="btn btn-secondary px-2 py-0.5 text-xs">−</button>
-                    <span class="w-8 text-center text-sm font-bold text-gold-300">{{ item.quantity }}</span>
-                    <button @click="incrementQuantity(idx)" class="btn btn-secondary px-2 py-0.5 text-xs">+</button>
-                  </div>
-                  <button @click="removeItem(idx)" class="text-red-400 hover:text-red-300 text-xs">✕ remove</button>
-                </div>
-              </div>
-            </template>
+          <!-- Top row: badge + controls -->
+          <div class="flex items-start justify-between gap-2">
+            <span class="text-xs font-medium px-1.5 py-0.5 rounded leading-tight shrink-0" :class="typeBadgeClass(item.type)">
+              {{ typeIcon(item.type) }} {{ item.type }}
+            </span>
+            <div class="flex items-center gap-1 shrink-0">
+              <button @click="decrementQuantity(idx)" class="btn btn-secondary px-2 py-0.5 text-xs">−</button>
+              <span class="w-6 text-center text-sm font-bold text-gold-300">{{ item.quantity }}</span>
+              <button @click="incrementQuantity(idx)" class="btn btn-secondary px-2 py-0.5 text-xs">+</button>
+              <button @click="removeItem(idx)" class="text-red-400 hover:text-red-300 text-xs ml-1 opacity-60 hover:opacity-100" title="Remove item">✕</button>
+            </div>
           </div>
+
+          <!-- Item name + weight -->
+          <div>
+            <div class="text-sm font-semibold text-gray-100 leading-tight">{{ item.name }}</div>
+            <div class="text-xs text-gray-500 mt-0.5">{{ item.weight > 0 ? `${item.weight} lb` : '— lb' }}</div>
+          </div>
+
+          <!-- Description (always visible) -->
+          <div
+            v-if="item.description || knownDescriptions[item.name]"
+            class="text-xs text-gray-400 leading-relaxed whitespace-pre-wrap border-t border-slate-600 pt-2"
+          >{{ item.description || knownDescriptions[item.name] }}</div>
         </div>
 
         <!-- Empty State -->
         <div
           v-if="filteredEquipment.length === 0"
-          class="col-span-2 lg:col-span-3 text-center text-gray-400 text-sm py-8"
+          class="col-span-2 text-center text-gray-400 text-sm py-8"
         >
           {{ searchQuery || filterType ? 'No items match your search' : 'No items in inventory' }}
         </div>
@@ -215,7 +175,6 @@ if (!characterStore.equipment) {
 
 const searchQuery = ref('')
 const filterType = ref('')
-const expandedItem = ref(null)
 const newItem = reactive({ name: '', type: 'misc', quantity: 1, weight: 0, description: '' })
 
 const typeIcon = (type) => ({ weapon: '⚔️', armor: '🛡️', tool: '🔧', consumable: '🧪', misc: '📦' }[type] || '📦')
@@ -226,13 +185,6 @@ const typeBadgeClass = (type) => ({
   consumable: 'bg-green-900/50 text-green-300',
   misc: 'bg-slate-600 text-gray-300'
 }[type] || 'bg-slate-600 text-gray-300')
-
-// Get the real index in characterStore.equipment for an item object
-const realIndex = (item) => characterStore.equipment.indexOf(item)
-
-const toggleExpand = (realIdx) => {
-  expandedItem.value = expandedItem.value === realIdx ? null : realIdx
-}
 
 const filteredEquipment = computed(() => {
   let items = characterStore.equipment
@@ -280,10 +232,7 @@ const decrementQuantity = (idx) => {
 const removeItem = (idx) => {
   const item = filteredEquipment.value[idx]
   const ri = characterStore.equipment.indexOf(item)
-  if (ri > -1) {
-    if (expandedItem.value === ri) expandedItem.value = null
-    characterStore.equipment.splice(ri, 1)
-  }
+  if (ri > -1) characterStore.equipment.splice(ri, 1)
 }
 </script>
 

@@ -63,6 +63,7 @@
                   type="text"
                   class="flex-1 bg-transparent border-b border-current outline-none text-sm"
                   placeholder="Combatant name"
+                  @change="saveCharacterState(characterStore)"
                 />
               </div>
               <div class="flex items-center gap-2">
@@ -71,6 +72,7 @@
                   type="number"
                   class="w-12 bg-slate-600 rounded px-1 py-0.5 text-sm text-center"
                   placeholder="Init"
+                  @change="saveCharacterState(characterStore)"
                 />
                 <button @click="removeCombatant(idx)" class="text-red-400 hover:text-red-300">✕</button>
               </div>
@@ -112,60 +114,32 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import CardFrame from './CardFrame.vue'
 import StatTooltip from './StatTooltip.vue'
-import { characterStore } from '../stores/characterStore.js'
+import {
+  characterStore,
+  saveCharacterState,
+  incrementRound,
+  decrementRound,
+  nextTurn,
+  previousTurn,
+  endCombat as storeEndCombat
+} from '../stores/characterStore.js'
 
-// Initialize combat state if not exists
+// Initialize combat state if not already in store/localStorage
 if (!characterStore.combatState) {
-  characterStore.combatState = reactive({
+  characterStore.combatState = {
     initiative: [{ name: 'Lyra', roll: 0, order: 0 }],
     currentRound: 1,
     currentTurn: 0
-  })
+  }
+  saveCharacterState(characterStore)
 }
 
 const combatState = characterStore.combatState
 const newCombatantName = ref('')
 const newCombatantInit = ref(0)
-
-const incrementRound = () => {
-  combatState.currentRound++
-  // Reset action economy on new round
-  if (characterStore.actions) {
-    characterStore.actions.actionUsed = false
-    characterStore.actions.bonusActionUsed = false
-    characterStore.actions.reactionUsed = false
-    characterStore.actions.movementUsed = 0
-  }
-}
-
-const decrementRound = () => {
-  if (combatState.currentRound > 1) combatState.currentRound--
-}
-
-const nextTurn = () => {
-  if (combatState.currentTurn < combatState.initiative.length - 1) {
-    combatState.currentTurn++
-  } else {
-    combatState.currentTurn = 0
-    incrementRound()
-  }
-  // Reset action economy on new turn
-  if (characterStore.actions) {
-    characterStore.actions.actionUsed = false
-    characterStore.actions.bonusActionUsed = false
-    characterStore.actions.reactionUsed = false
-    characterStore.actions.movementUsed = 0
-  }
-}
-
-const previousTurn = () => {
-  if (combatState.currentTurn > 0) {
-    combatState.currentTurn--
-  }
-}
 
 const addCombatant = () => {
   if (newCombatantName.value.trim()) {
@@ -176,6 +150,7 @@ const addCombatant = () => {
     })
     newCombatantName.value = ''
     newCombatantInit.value = 0
+    saveCharacterState(characterStore)
   }
 }
 
@@ -184,18 +159,18 @@ const removeCombatant = (idx) => {
   if (combatState.currentTurn >= combatState.initiative.length) {
     combatState.currentTurn = 0
   }
+  saveCharacterState(characterStore)
 }
 
 const sortByInitiative = () => {
   combatState.initiative.sort((a, b) => b.roll - a.roll)
   combatState.currentTurn = 0
+  saveCharacterState(characterStore)
 }
 
 const endCombat = () => {
   if (confirm('End combat and reset tracker?')) {
-    combatState.initiative = [{ name: 'Lyra', roll: 0, order: 0 }]
-    combatState.currentRound = 1
-    combatState.currentTurn = 0
+    storeEndCombat()
   }
 }
 </script>

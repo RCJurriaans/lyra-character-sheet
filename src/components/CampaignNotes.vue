@@ -76,9 +76,11 @@
               ✕
             </button>
           </div>
-          <div class="text-sm text-gray-200 whitespace-pre-wrap break-words">
-            {{ note.text }}
-          </div>
+          <!-- Render text with NPC names highlighted -->
+          <div
+            class="text-sm text-gray-200 whitespace-pre-wrap break-words"
+            v-html="highlightNPCNames(note.text)"
+          />
         </div>
 
         <div v-if="filteredNotes.length === 0" class="text-center text-gray-400 text-sm py-4">
@@ -188,7 +190,35 @@ const formatDate = (dateString) => {
     minute: '2-digit'
   })
 }
+
+// NPC name highlighting
+const escapeHtml = (text) => text
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;')
+
+const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+const highlightNPCNames = (text) => {
+  const safe = escapeHtml(text)
+  const npcs = characterStore.npcs
+  if (!npcs || npcs.length === 0) return safe
+  const names = npcs.map(n => n.name.trim()).filter(n => n.length > 0)
+  if (names.length === 0) return safe
+  const pattern = new RegExp(`(${names.map(escapeRegex).join('|')})`, 'gi')
+  return safe.replace(pattern, '<mark class="npc-highlight">$1</mark>')
+}
 </script>
 
 <style scoped>
+:deep(.npc-highlight) {
+  background: rgba(212, 175, 55, 0.2);
+  color: var(--theme-primary, #d4af37);
+  border-radius: 3px;
+  padding: 0 3px;
+  font-weight: 600;
+  cursor: default;
+}
 </style>

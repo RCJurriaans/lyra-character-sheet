@@ -46,7 +46,8 @@ const pages = [
   { id: 'combat', label: 'Combat', icon: '⚔️' },
   { id: 'resources', label: 'Resources', icon: '💎' },
   { id: 'skills', label: 'Skills', icon: '⭐' },
-  { id: 'inventory', label: 'Inventory', icon: '🎒' }
+  { id: 'inventory', label: 'Inventory', icon: '🎒' },
+  { id: 'notes', label: 'Notes', icon: '📝' }
 ]
 
 const currentPage = computed(() => navigationState.currentPage)

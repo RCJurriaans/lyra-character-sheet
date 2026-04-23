@@ -22,6 +22,7 @@
       <PageResources v-show="navigationState.currentPage === 'resources'" />
       <PageSkills v-show="navigationState.currentPage === 'skills'" />
       <PageInventory v-show="navigationState.currentPage === 'inventory'" />
+      <PageNotes v-show="navigationState.currentPage === 'notes'" />
 
       <!-- Contextual Hints Panel -->
       <HintsPanel />
@@ -59,6 +60,7 @@ import PageCombat from './components/PageCombat.vue'
 import PageResources from './components/PageResources.vue'
 import PageSkills from './components/PageSkills.vue'
 import PageInventory from './components/PageInventory.vue'
+import PageNotes from './components/PageNotes.vue'
 
 const { initTheme } = useTheme()
 const isInCombat = ref(false)

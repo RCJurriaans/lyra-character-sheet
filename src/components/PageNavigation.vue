@@ -47,6 +47,7 @@ const pages = [
   { id: 'resources', label: 'Resources', icon: '💎' },
   { id: 'skills', label: 'Skills', icon: '⭐' },
   { id: 'inventory', label: 'Inventory', icon: '🎒' },
+  { id: 'familiars', label: 'Familiars', icon: '🐾' },
   { id: 'notes', label: 'Notes', icon: '📝' }
 ]
 

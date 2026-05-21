@@ -4,7 +4,8 @@
       📖 Prepared Spells
     </h2>
 
-    <div class="mb-3">
+    <!-- Search -->
+    <div class="mb-2">
       <input
         v-model="searchQuery"
         type="text"
@@ -13,18 +14,64 @@
       />
     </div>
 
+    <!-- Category filter pills -->
+    <div class="flex flex-wrap gap-1 mb-3">
+      <button
+        @click="activeFilter = null"
+        :class="[
+          'text-xs px-2 py-0.5 rounded-full font-semibold border transition-colors',
+          !activeFilter
+            ? 'bg-gold-400 text-slate-900 border-gold-400'
+            : 'bg-slate-700 text-gray-400 border-slate-600 hover:border-gray-400'
+        ]"
+      >All</button>
+      <button
+        v-for="(cfg, key) in tagConfig"
+        :key="key"
+        @click="activeFilter = activeFilter === key ? null : key"
+        :class="[
+          'text-xs px-2 py-0.5 rounded-full font-semibold border transition-colors',
+          activeFilter === key
+            ? cfg.activeClass
+            : 'bg-slate-700 text-gray-400 border-slate-600 hover:border-gray-400'
+        ]"
+      >{{ cfg.icon }} {{ cfg.label }}</button>
+    </div>
+
+    <!-- Spell count -->
+    <div class="text-xs text-gray-500 mb-2">
+      {{ filteredSpells.length }} spell{{ filteredSpells.length !== 1 ? 's' : '' }}
+      <span v-if="activeFilter || searchQuery"> (filtered)</span>
+    </div>
+
     <div class="max-h-96 overflow-y-auto space-y-2 text-sm">
       <div
         v-for="spell in filteredSpells"
         :key="spell.name"
-        class="border-l-2 border-gold-400 bg-slate-700 p-2 rounded cursor-pointer hover:bg-slate-600 transition-colors"
+        :class="[
+          'border-l-2 bg-slate-700 p-2 rounded cursor-pointer hover:bg-slate-600 transition-colors',
+          getSpellBorderClass(spell)
+        ]"
         @click="selectedSpell = selectedSpell === spell.name ? null : spell.name"
       >
-        <div class="flex items-start justify-between">
-          <div>
-            <div class="font-bold text-gold-300">{{ spell.name }}</div>
-            <div class="text-xs text-gray-500">{{ spell.level }} • {{ spell.type }}</div>
+        <!-- Collapsed header -->
+        <div class="flex items-start justify-between gap-2">
+          <div class="min-w-0 flex-1">
+            <div class="font-bold text-gold-300 flex items-center gap-1 flex-wrap">
+              {{ spell.name }}
+              <span v-if="spell.tags?.includes('ritual')" class="text-xs text-teal-400" title="Can be cast as a ritual (10 min, no spell slot)">📜</span>
+            </div>
+            <div class="flex items-center gap-1 flex-wrap mt-0.5">
+              <span class="text-xs text-gray-500">{{ spell.level }} • {{ spell.type }}</span>
+              <!-- Category tags -->
+              <span
+                v-for="tag in spell.tags?.filter(t => t !== 'ritual')"
+                :key="tag"
+                :class="['text-xs px-1.5 py-0 rounded-full font-medium', tagConfig[tag]?.pillClass]"
+              >{{ tagConfig[tag]?.label }}</span>
+            </div>
           </div>
+          <!-- Source badges -->
           <div class="flex gap-1 flex-shrink-0">
             <span v-if="spell.domain" class="text-xs bg-gold-400 text-slate-900 px-2 py-0.5 rounded font-bold" title="Life Domain — always prepared">D</span>
             <span v-if="spell.source === 'Thaumaturge'" class="text-xs bg-purple-500 text-white px-2 py-0.5 rounded font-bold" title="Divine Order: Thaumaturge bonus cantrip">T</span>
@@ -40,7 +87,10 @@
           <p v-if="spell.duration" class="mb-1"><strong>Duration:</strong> {{ spell.duration }}</p>
           <p v-if="spell.description" class="mt-2">{{ spell.description }}</p>
           <p v-if="spell.damage" class="text-fortuneRed font-bold mt-1">💥 {{ spell.damage }}</p>
-          <p v-if="spell.source" class="text-blue-400 mt-1 italic">📌 Source: {{ spell.source }}</p>
+          <div class="flex flex-wrap gap-1 mt-2">
+            <span v-if="spell.source" class="text-xs text-blue-400 italic">📌 {{ spell.source }}</span>
+            <span v-if="spell.tags?.includes('ritual')" class="text-xs text-teal-400 italic">📜 Ritual: cast in 10 min with no spell slot</span>
+          </div>
         </div>
       </div>
     </div>
@@ -52,57 +102,150 @@ import { ref, computed } from 'vue'
 
 const searchQuery = ref('')
 const selectedSpell = ref(null)
+const activeFilter = ref(null)
+
+const tagConfig = {
+  combat:  { label: 'Combat',  icon: '⚔️', pillClass: 'bg-red-900 text-red-300',    activeClass: 'bg-red-700 text-red-100 border-red-500'    },
+  healing: { label: 'Healing', icon: '💚', pillClass: 'bg-green-900 text-green-300', activeClass: 'bg-green-700 text-green-100 border-green-500' },
+  support: { label: 'Support', icon: '🛡️', pillClass: 'bg-blue-900 text-blue-300',   activeClass: 'bg-blue-700 text-blue-100 border-blue-500'   },
+  utility: { label: 'Utility', icon: '🔧', pillClass: 'bg-purple-900 text-purple-300', activeClass: 'bg-purple-700 text-purple-100 border-purple-500' },
+  ritual:  { label: 'Ritual',  icon: '📜', pillClass: 'bg-teal-900 text-teal-300',   activeClass: 'bg-teal-700 text-teal-100 border-teal-500'   },
+}
+
+const borderByPrimaryTag = {
+  combat:  'border-red-500',
+  healing: 'border-green-500',
+  support: 'border-blue-500',
+  utility: 'border-purple-500',
+}
+
+const getSpellBorderClass = (spell) => {
+  const primary = spell.tags?.find(t => t !== 'ritual')
+  return borderByPrimaryTag[primary] || 'border-gold-400'
+}
 
 const spells = [
-  // Cantrips — Cleric (4 known at level 5)
-  { name: 'Guidance', level: 'Cantrip', type: 'Divination', castingTime: '1 action', range: 'Touch', components: 'V,S', duration: '1 minute', description: 'One willing creature gets +1d4 to one ability check of its choice within 1 minute.' },
-  { name: 'Sacred Flame', level: 'Cantrip', type: 'Evocation', castingTime: '1 action', range: '60 feet', components: 'V,S', duration: 'Instantaneous', description: 'Target must succeed on a DC 14 DEX save or take 2d8 radiant damage. No benefit from cover.', damage: '2d8 radiant' },
-  { name: 'Toll the Dead', level: 'Cantrip', type: 'Necromancy', castingTime: '1 action', range: '60 feet', components: 'V,S', duration: 'Instantaneous', description: 'Target must succeed on a DC 14 WIS save or take 2d8 necrotic damage (2d12 if already missing any HP).', damage: '2d8 or 2d12 necrotic' },
-  { name: 'Spare the Dying', level: 'Cantrip', type: 'Necromancy', castingTime: '1 action', range: 'Touch', components: 'V,S', duration: 'Instantaneous', description: 'Touch a dying creature and stabilize it. Does not restore HP.' },
+  // ── Cantrips ─────────────────────────────────────────────────────────────
+  { name: 'Guidance',         level: 'Cantrip', type: 'Divination',    tags: ['support'],
+    castingTime: '1 action',      range: 'Touch',    components: 'V,S', duration: '1 minute',
+    description: 'One willing creature gets +1d4 to one ability check of its choice within 1 minute.' },
 
-  // Cantrips — Divine Order: Thaumaturge bonus (doesn't count against Cleric cantrips known)
-  { name: 'Thaumaturgy', level: 'Cantrip', type: 'Transmutation', castingTime: '1 action', range: '30 feet', components: 'V', duration: 'Up to 1 minute', description: 'Manifest a minor wonder: alter a flame, cause tremors, change your eye colour, create an eerie sound, open an unlocked door, or make your voice boom. Up to 3 effects at once.', source: 'Thaumaturge' },
+  { name: 'Sacred Flame',     level: 'Cantrip', type: 'Evocation',     tags: ['combat'],
+    castingTime: '1 action',      range: '60 feet',  components: 'V,S', duration: 'Instantaneous',
+    description: 'Target must succeed on a DC 14 DEX save or take 2d8 radiant damage. No benefit from cover.',
+    damage: '2d8 radiant' },
 
-  // Cantrips — Magic Initiate (Wizard) from Sage background
-  { name: 'Prestidigitation', level: 'Cantrip', type: 'Transmutation', castingTime: '1 action', range: '10 feet', components: 'V,S', duration: 'Up to 1 hour', description: 'Perform a minor magical trick: light or snuff a candle/torch, clean a small object, chill/warm/flavour 1 cubic foot, make a trinket, draw a symbol in the air. Up to 3 effects at once.', source: 'Magic Initiate (Wizard)' },
-  { name: 'Mage Hand', level: 'Cantrip', type: 'Conjuration', castingTime: '1 action', range: '30 feet', components: 'V,S', duration: '1 minute', description: 'Create a spectral floating hand that can manipulate objects, open doors, pick up light items (up to 10 lbs). Disappears if you cast it again or move it more than 30 feet away.', source: 'Magic Initiate (Wizard)' },
+  { name: 'Toll the Dead',    level: 'Cantrip', type: 'Necromancy',    tags: ['combat'],
+    castingTime: '1 action',      range: '60 feet',  components: 'V,S', duration: 'Instantaneous',
+    description: 'Target must succeed on a DC 14 WIS save or take 2d8 necrotic damage (2d12 if already missing any HP).',
+    damage: '2d8 or 2d12 necrotic' },
 
-  // 1st Level Domain Spells (always prepared — Life Domain)
-  { name: 'Bless', level: '1st', type: 'Enchantment', domain: true, castingTime: '1 action', range: '30 feet', components: 'V,S,M', duration: 'Concentration, up to 1 minute', description: 'Bless up to 3 creatures. When a target makes an attack roll or saving throw, they roll a d4 and add it to the result.' },
-  { name: 'Cure Wounds', level: '1st', type: 'Evocation', domain: true, castingTime: '1 action', range: 'Touch', components: 'V,S', duration: 'Instantaneous', description: 'A creature you touch regains 2d8 + WIS mod HP (+2 extra from Disciple of Life). Upcast: +2d8 per spell level above 1st.' },
+  { name: 'Spare the Dying',  level: 'Cantrip', type: 'Necromancy',    tags: ['utility'],
+    castingTime: '1 action',      range: 'Touch',    components: 'V,S', duration: 'Instantaneous',
+    description: 'Touch a dying creature (0 HP) and stabilize it. Does not restore HP.' },
 
-  // 1st Level — Magic Initiate (Wizard), can cast using spell slots at 5th level
-  { name: 'Find Familiar', level: '1st', type: 'Conjuration', castingTime: '1 hour (ritual)', range: '10 feet', components: 'V,S,M', duration: 'Instantaneous', description: 'Summon a familiar spirit (bat, cat, crab, frog, hawk, lizard, octopus, owl, snake, fish, weasel, spider, or rat). Can see through its eyes, use it to deliver touch spells, and it acts on your turn. 1/day free OR use a spell slot (5th level+).', source: 'Magic Initiate (Wizard)' },
+  { name: 'Thaumaturgy',      level: 'Cantrip', type: 'Transmutation', tags: ['utility'],
+    source: 'Thaumaturge',
+    castingTime: '1 action',      range: '30 feet',  components: 'V',   duration: 'Up to 1 minute',
+    description: 'Manifest a minor wonder: alter a flame, cause tremors, change your eye colour, create an eerie sound, open an unlocked door, or make your voice boom. Up to 3 effects at once.' },
 
-  // 1st Level Chosen Spells
-  { name: 'Command', level: '1st', type: 'Enchantment', castingTime: '1 action', range: '60 feet', components: 'V', duration: '1 round', description: 'A creature you can see makes a DC 14 WIS save or obeys a one-word command: Approach, Drop, Flee, Grovel, Halt, Surrender, etc. Doesn\'t work on undead or creatures that don\'t understand you.' },
-  { name: 'Healing Word', level: '1st', type: 'Evocation', castingTime: '1 bonus action', range: '60 feet', components: 'V', duration: 'Instantaneous', description: 'Creature within range regains 2d4 + WIS mod HP (+2 extra from Disciple of Life). Bonus action means you can still cast an attack cantrip this turn.' },
-  { name: 'Guiding Bolt', level: '1st', type: 'Evocation', castingTime: '1 action', range: '120 feet', components: 'V,S', duration: 'Instantaneous', description: 'Ranged spell attack (+6 to hit). Hit: 4d6 radiant damage. The next attack roll against the target before the end of your next turn has advantage.', damage: '4d6 radiant' },
-  { name: 'Sanctuary', level: '1st', type: 'Abjuration', castingTime: '1 bonus action', range: '30 feet', components: 'V,S,M', duration: 'Up to 1 minute', description: 'Ward yourself or a creature within range. Any attacker must succeed on a DC 14 WIS save or be forced to choose a new target (or lose the attack/spell). Does not protect against area effects. Ends immediately if the warded creature attacks, deals damage, or casts a harmful spell.' },
-  { name: 'Shield of Faith', level: '1st', type: 'Abjuration', castingTime: '1 bonus action', range: '60 feet', components: 'V,S,M', duration: 'Concentration, up to 10 minutes', description: 'A shimmering field surrounds a creature of your choice, granting +2 AC for the duration.' },
+  { name: 'Prestidigitation', level: 'Cantrip', type: 'Transmutation', tags: ['utility'],
+    source: 'Magic Initiate (Wizard)',
+    castingTime: '1 action',      range: '10 feet',  components: 'V,S', duration: 'Up to 1 hour',
+    description: 'Perform a minor magical trick: light or snuff a flame, clean a small object, chill/warm/flavour food, make a trinket, draw a symbol in air. Up to 3 effects at once.' },
 
-  // 2nd Level Domain Spells (always prepared — Life Domain, 2024 rules)
-  { name: 'Aid', level: '2nd', type: 'Abjuration', domain: true, castingTime: '1 action', range: '30 feet', components: 'V,S,M', duration: '8 hours', description: 'Choose up to 3 creatures. Each increases their max HP and current HP by 5 for 8 hours. Upcast: +5 HP per spell level above 2nd.' },
-  { name: 'Lesser Restoration', level: '2nd', type: 'Abjuration', domain: true, castingTime: '1 action', range: 'Touch', components: 'V,S', duration: 'Instantaneous', description: 'End one disease or one of the following conditions on a creature you touch: blinded, deafened, paralyzed, or poisoned.' },
+  { name: 'Mage Hand',        level: 'Cantrip', type: 'Conjuration',   tags: ['utility'],
+    source: 'Magic Initiate (Wizard)',
+    castingTime: '1 action',      range: '30 feet',  components: 'V,S', duration: '1 minute',
+    description: 'Spectral floating hand manipulates objects, opens unlocked doors, picks up items up to 10 lbs. Disappears if you cast it again or move it 30+ feet away.' },
 
-  // 2nd Level Chosen Spells
-  { name: 'Hold Person', level: '2nd', type: 'Enchantment', castingTime: '1 action', range: '60 feet', components: 'V,S,M', duration: 'Concentration, up to 1 minute', description: 'Humanoid makes a DC 14 WIS save or is paralyzed. They can retry the save at the end of each of their turns.' },
+  // ── 1st Level ─────────────────────────────────────────────────────────────
+  { name: 'Bless',            level: '1st',     type: 'Enchantment',   tags: ['support'],
+    domain: true,
+    castingTime: '1 action',      range: '30 feet',  components: 'V,S,M', duration: 'Concentration, up to 1 minute',
+    description: 'Bless up to 3 creatures. When a target makes an attack roll or saving throw, they roll a d4 and add it to the result.' },
 
-  // 3rd Level Domain Spells (always prepared — Life Domain, 2024 rules)
-  { name: 'Mass Healing Word', level: '3rd', type: 'Evocation', domain: true, castingTime: '1 bonus action', range: '60 feet', components: 'V', duration: 'Instantaneous', description: 'Up to 6 creatures you can see each regain 2d4 + WIS mod HP (+2 extra from Disciple of Life). Bonus action, so you can still cast a cantrip this turn.' },
-  { name: 'Revivify', level: '3rd', type: 'Necromancy', domain: true, castingTime: '1 action', range: 'Touch', components: 'V,S,M', duration: 'Instantaneous', description: 'Touch a creature that has died within the last minute. It returns to life with 1 HP. Requires a diamond worth 300gp (consumed).' },
+  { name: 'Cure Wounds',      level: '1st',     type: 'Evocation',     tags: ['healing'],
+    domain: true,
+    castingTime: '1 action',      range: 'Touch',    components: 'V,S', duration: 'Instantaneous',
+    description: 'A creature you touch regains 2d8 + WIS mod HP (+2 extra from Disciple of Life). Upcast: +2d8 per spell level above 1st.' },
 
-  // 3rd Level Chosen Spells
-  { name: 'Beacon of Hope', level: '3rd', type: 'Abjuration', castingTime: '1 action', range: '60 feet', components: 'V,S', duration: 'Concentration, up to 1 minute', description: 'Targets have advantage on WIS saves and death saving throws. When they receive healing, they regain the maximum number of HP possible.' },
-  { name: 'Spirit Guardians', level: '3rd', type: 'Conjuration', castingTime: '1 action', range: 'Self (15-foot radius)', components: 'V,S,M', duration: 'Concentration, up to 10 minutes', description: 'Spectral guardians swirl around you. Creatures you choose that enter or start their turn in the area must make a DC 14 WIS save or take 3d8 radiant (or necrotic) damage (half on save). Your speed is halved.', damage: '3d8 radiant/necrotic' },
-  { name: 'Dispel Magic', level: '3rd', type: 'Abjuration', castingTime: '1 action', range: '120 feet', components: 'V,S', duration: 'Instantaneous', description: 'End any spell of 3rd level or lower on the target. For spells of 4th level or higher, make a spellcasting ability check (DC 10 + spell\'s level).' },
+  { name: 'Find Familiar',    level: '1st',     type: 'Conjuration',   tags: ['utility', 'ritual'],
+    source: 'Magic Initiate (Wizard)',
+    castingTime: '1 hour',        range: '10 feet',  components: 'V,S,M', duration: 'Instantaneous',
+    description: 'Summon a familiar (bat, cat, owl, hawk, rat, raven, spider, weasel, etc.). See through its eyes, deliver touch spells through it, and it acts on your initiative. Your familiar persists until dismissed or killed — you do not resummon it daily. Options to cast: (1) As a ritual — 10 min, no spell slot, unlimited times. (2) Magic Initiate free use — 1/Long Rest, instantly. (3) Spell slot — any time at level 5+.' },
+
+  { name: 'Command',          level: '1st',     type: 'Enchantment',   tags: ['combat'],
+    castingTime: '1 action',      range: '60 feet',  components: 'V',   duration: '1 round',
+    description: 'A creature makes a DC 14 WIS save or obeys a one-word command: Approach, Drop, Flee, Grovel, Halt, Surrender, etc. Doesn\'t affect undead or creatures that can\'t understand you.' },
+
+  { name: 'Healing Word',     level: '1st',     type: 'Evocation',     tags: ['healing'],
+    castingTime: '1 bonus action', range: '60 feet', components: 'V',   duration: 'Instantaneous',
+    description: 'Creature within range regains 2d4 + WIS mod HP (+2 extra from Disciple of Life). Bonus action — you can still cast a cantrip or make a weapon attack this turn.' },
+
+  { name: 'Guiding Bolt',     level: '1st',     type: 'Evocation',     tags: ['combat'],
+    castingTime: '1 action',      range: '120 feet', components: 'V,S', duration: 'Instantaneous',
+    description: 'Ranged spell attack (+6 to hit). Hit: 4d6 radiant damage. The next attack roll against the target before the end of your next turn has advantage.',
+    damage: '4d6 radiant' },
+
+  { name: 'Sanctuary',        level: '1st',     type: 'Abjuration',    tags: ['support'],
+    castingTime: '1 bonus action', range: '30 feet', components: 'V,S,M', duration: 'Up to 1 minute',
+    description: 'Ward yourself or a creature within range. Any attacker must succeed on a DC 14 WIS save or be forced to choose a new target (or lose the attack/spell). Does not protect against area effects. Ends immediately if the warded creature attacks, deals damage, or casts a harmful spell.' },
+
+  { name: 'Shield of Faith',  level: '1st',     type: 'Abjuration',    tags: ['support'],
+    castingTime: '1 bonus action', range: '60 feet', components: 'V,S,M', duration: 'Concentration, up to 10 minutes',
+    description: 'A shimmering field surrounds a creature of your choice, granting +2 AC for the duration.' },
+
+  // ── 2nd Level ─────────────────────────────────────────────────────────────
+  { name: 'Aid',              level: '2nd',     type: 'Abjuration',    tags: ['support'],
+    domain: true,
+    castingTime: '1 action',      range: '30 feet',  components: 'V,S,M', duration: '8 hours',
+    description: 'Choose up to 3 creatures. Each increases their max HP and current HP by 5 for 8 hours. Upcast: +5 HP per spell level above 2nd.' },
+
+  { name: 'Lesser Restoration', level: '2nd',   type: 'Abjuration',    tags: ['utility'],
+    domain: true,
+    castingTime: '1 action',      range: 'Touch',    components: 'V,S', duration: 'Instantaneous',
+    description: 'End one disease or one of the following conditions on a creature you touch: blinded, deafened, paralyzed, or poisoned.' },
+
+  { name: 'Hold Person',      level: '2nd',     type: 'Enchantment',   tags: ['combat'],
+    castingTime: '1 action',      range: '60 feet',  components: 'V,S,M', duration: 'Concentration, up to 1 minute',
+    description: 'A humanoid makes a DC 14 WIS save or is paralyzed. They can retry the save at the end of each of their turns. Melee attacks against a paralyzed creature within 5 ft are critical hits.' },
+
+  // ── 3rd Level ─────────────────────────────────────────────────────────────
+  { name: 'Mass Healing Word', level: '3rd',    type: 'Evocation',     tags: ['healing'],
+    domain: true,
+    castingTime: '1 bonus action', range: '60 feet', components: 'V',   duration: 'Instantaneous',
+    description: 'Up to 6 creatures you can see each regain 2d4 + WIS mod HP (+2 extra from Disciple of Life). Bonus action — you can still cast a cantrip this turn.' },
+
+  { name: 'Revivify',         level: '3rd',     type: 'Necromancy',    tags: ['healing'],
+    domain: true,
+    castingTime: '1 action',      range: 'Touch',    components: 'V,S,M', duration: 'Instantaneous',
+    description: 'Touch a creature that has died within the last minute. It returns to life with 1 HP. Requires a diamond worth 300gp (consumed).' },
+
+  { name: 'Beacon of Hope',   level: '3rd',     type: 'Abjuration',    tags: ['support'],
+    castingTime: '1 action',      range: '60 feet',  components: 'V,S', duration: 'Concentration, up to 1 minute',
+    description: 'Targets have advantage on WIS saves and death saving throws. When they receive healing, they regain the maximum number of HP possible. Combines extremely well with Mass Healing Word or Cure Wounds.' },
+
+  { name: 'Spirit Guardians', level: '3rd',     type: 'Conjuration',   tags: ['combat'],
+    castingTime: '1 action',      range: 'Self (15-ft radius)', components: 'V,S,M', duration: 'Concentration, up to 10 minutes',
+    description: 'Spectral guardians swirl around you. Creatures you choose that enter or start their turn in the area make a DC 14 WIS save or take 3d8 radiant (or necrotic) damage (half on save). Your speed is halved.',
+    damage: '3d8 radiant/necrotic' },
+
+  { name: 'Dispel Magic',     level: '3rd',     type: 'Abjuration',    tags: ['utility'],
+    castingTime: '1 action',      range: '120 feet', components: 'V,S', duration: 'Instantaneous',
+    description: 'End any spell of 3rd level or lower on the target automatically. For spells of 4th level or higher, make a DC (10 + spell\'s level) spellcasting ability check.' },
 ]
 
 const filteredSpells = computed(() => {
-  return spells.filter(spell =>
-    spell.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    spell.type.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
+  return spells.filter(spell => {
+    const q = searchQuery.value.toLowerCase()
+    const matchesSearch = !q ||
+      spell.name.toLowerCase().includes(q) ||
+      spell.type.toLowerCase().includes(q) ||
+      spell.tags?.some(t => t.includes(q))
+    const matchesFilter = !activeFilter.value || spell.tags?.includes(activeFilter.value)
+    return matchesSearch && matchesFilter
+  })
 })
 </script>
 

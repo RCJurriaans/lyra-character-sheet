@@ -57,6 +57,21 @@
           </template>
         </StatTooltip>
 
+        <!-- Speed with Tooltip -->
+        <StatTooltip title="Speed">
+          <div class="stat-box">
+            <div class="text-xs font-bold uppercase stat-label">Speed</div>
+            <div class="text-2xl font-bold stat-value">{{ store.speed }}<span class="text-sm font-normal">ft</span></div>
+          </div>
+          <template #content>
+            <div>
+              <p class="mb-2"><span class="tooltip-emphasis font-bold">What it means:</span> The number of feet you can move on your turn in combat.</p>
+              <p class="mb-2"><span class="tooltip-emphasis font-bold">Source:</span> Satyr base speed of 35 feet.</p>
+              <p><span class="tooltip-emphasis font-bold">When to use:</span> You can split movement before and after an action. Difficult terrain costs 2 ft per ft moved.</p>
+            </div>
+          </template>
+        </StatTooltip>
+
         <!-- Passive Perception with Tooltip -->
         <StatTooltip title="Passive Perception">
           <div class="stat-box">
@@ -66,7 +81,7 @@
           <template #content>
             <div>
               <p class="mb-2"><span class="tooltip-emphasis font-bold">What it means:</span> How much detail you notice without actively looking. The DM uses this to determine if you spot hidden creatures or objects.</p>
-              <p class="mb-2"><span class="tooltip-emphasis font-bold">Calculation:</span> 10 + Perception modifier (WIS +3 + Proficiency +3 = +6)</p>
+              <p class="mb-2"><span class="tooltip-emphasis font-bold">Calculation:</span> 10 + Perception modifier. Perception is WIS (+3), not proficient = +3. Passive Perception = 13.</p>
               <p><span class="tooltip-emphasis font-bold">When to use:</span> Automatically checked against a creature's Stealth roll. If their roll doesn't beat your Passive Perception, you notice them.</p>
             </div>
           </template>

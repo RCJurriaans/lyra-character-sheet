@@ -68,20 +68,32 @@ export const spendLuckyPoint = () => {
   return false
 }
 
-// Channel Divinity
+// Channel Divinity — 2 uses per short/long rest (2024 rules)
 export const useChannelDivinity = () => {
-  if (!characterStore.channelDivinity.used) {
-    characterStore.channelDivinity.used = true
+  const cd = characterStore.channelDivinity
+  if (cd.used < cd.maxUses) {
+    cd.used++
     saveCharacterState(characterStore)
     return true
   }
   return false
 }
 
-// Preserve Life
+export const restoreChannelDivinity = () => {
+  if (characterStore.channelDivinity.used > 0) {
+    characterStore.channelDivinity.used--
+    saveCharacterState(characterStore)
+    return true
+  }
+  return false
+}
+
+// Preserve Life — consumes a Channel Divinity use (2024 rules)
 export const usePreserveLife = (amount) => {
-  if (characterStore.preserveLife.current >= amount) {
+  const cd = characterStore.channelDivinity
+  if (characterStore.preserveLife.current >= amount && cd.used < cd.maxUses) {
     characterStore.preserveLife.current -= amount
+    cd.used++
     saveCharacterState(characterStore)
     return true
   }
@@ -102,8 +114,8 @@ export const longRest = () => {
   // Restore Lucky Points
   characterStore.luckyPoints.current = characterStore.luckyPoints.max
 
-  // Restore Channel Divinity
-  characterStore.channelDivinity.used = false
+  // Restore Channel Divinity (2 uses)
+  characterStore.channelDivinity.used = 0
 
   // Restore Preserve Life
   characterStore.preserveLife.current = characterStore.preserveLife.max
@@ -115,11 +127,9 @@ export const longRest = () => {
 }
 
 export const shortRest = () => {
-  // Short rest only restores hit dice and some features
-  characterStore.luckyPoints.current = Math.min(
-    characterStore.luckyPoints.max,
-    characterStore.luckyPoints.current + 1
-  )
+  // In 2024 rules, Channel Divinity recharges on a Short Rest
+  characterStore.channelDivinity.used = 0
+  characterStore.preserveLife.current = characterStore.preserveLife.max
   saveCharacterState(characterStore)
 }
 

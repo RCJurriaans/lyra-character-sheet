@@ -65,11 +65,14 @@ function mergeCharacterState(defaults, saved) {
     }
   }
 
-  // Channel Divinity — maxUses from defaults, used state preserved
+  // Channel Divinity — maxUses from defaults, used count preserved
+  // Migrates old boolean format (used: true/false) to counter format (used: 0/1/2)
   if (defaults.channelDivinity) {
+    const savedUsed = saved.channelDivinity?.used ?? 0
+    const usedCount = typeof savedUsed === 'boolean' ? (savedUsed ? 1 : 0) : savedUsed
     merged.channelDivinity = {
       maxUses: defaults.channelDivinity.maxUses,
-      used: saved.channelDivinity?.used ?? false
+      used: Math.min(usedCount, defaults.channelDivinity.maxUses)
     }
   }
 

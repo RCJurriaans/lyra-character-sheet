@@ -5,22 +5,23 @@
   "level": 5,
   "race": "Satyr",
   "alignment": "Chaotic Good",
-  "background": "Faction Agent (Wayfarer's Concord)",
+  "background": "Sage",
   "abilities": {
-    "str": 10,
+    "str": 8,
     "dex": 14,
-    "con": 14,
+    "con": 16,
     "int": 8,
     "wis": 17,
     "cha": 12
   },
   "hitPoints": {
-    "current": 38,
-    "max": 38,
+    "current": 43,
+    "max": 43,
     "temporary": 0
   },
   "ac": 19,
-  "initiative": 2,
+  "initiative": 3,
+  "speed": 35,
   "proficiencyBonus": 3,
   "spellSaveDC": 14,
   "spellAttackBonus": 6,
@@ -34,17 +35,17 @@
     "max": 3
   },
   "channelDivinity": {
-    "used": false,
-    "maxUses": 1
+    "used": 0,
+    "maxUses": 2
   },
   "preserveLife": {
     "current": 25,
     "max": 25
   },
   "savingThrows": {
-    "str": 0,
+    "str": -1,
     "dex": 2,
-    "con": 2,
+    "con": 3,
     "int": -1,
     "wis": 6,
     "cha": 4
@@ -52,22 +53,22 @@
   "skills": {
     "acrobatics": { "mod": 2, "proficient": false },
     "animalHandling": { "mod": 3, "proficient": false },
-    "arcana": { "mod": -1, "proficient": false },
-    "athletics": { "mod": 0, "proficient": false },
+    "arcana": { "mod": 2, "proficient": true },
+    "athletics": { "mod": -1, "proficient": false },
     "deception": { "mod": 1, "proficient": false },
-    "history": { "mod": -1, "proficient": false },
+    "history": { "mod": 2, "proficient": true },
     "insight": { "mod": 6, "proficient": true },
     "intimidation": { "mod": 1, "proficient": false },
     "investigation": { "mod": -1, "proficient": false },
     "medicine": { "mod": 6, "proficient": true },
     "nature": { "mod": -1, "proficient": false },
-    "perception": { "mod": 6, "proficient": true },
+    "perception": { "mod": 3, "proficient": false },
     "performance": { "mod": 4, "proficient": true },
     "persuasion": { "mod": 4, "proficient": true },
-    "religion": { "mod": -1, "proficient": false },
+    "religion": { "mod": 2, "proficient": false },
     "sleightOfHand": { "mod": 2, "proficient": false },
     "stealth": { "mod": 2, "proficient": false },
-    "survival": { "mod": 6, "proficient": true }
+    "survival": { "mod": 3, "proficient": false }
   },
   "languages": ["Common", "Sylvan", "Dwarvish", "Goblin"],
   "traits": {

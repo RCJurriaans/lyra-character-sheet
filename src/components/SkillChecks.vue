@@ -14,9 +14,9 @@
               <span
                 :class="[
                   'inline-block w-3 h-3 rounded-full flex-shrink-0',
-                  skill.proficient ? 'bg-fortuneGreen' : 'bg-slate-600'
+                  skill.proficient ? 'bg-fortuneGreen' : skill.thaumaturge ? 'bg-gold-400' : 'bg-slate-600'
                 ]"
-                :title="skill.proficient ? 'Proficient' : 'Not proficient'"
+                :title="skill.proficient ? 'Proficient' : skill.thaumaturge ? 'Thaumaturge: WIS modifier bonus' : 'Not proficient'"
               ></span>
 
               <!-- Skill name and modifier -->
@@ -66,7 +66,8 @@
 
       <!-- Proficiency Note -->
       <div class="text-xs text-gray-400 mt-3 italic">
-        ● = Proficient (+{{ characterStore.proficiencyBonus }}) • Proficiency based on class/background features
+        <span class="text-fortuneGreen">●</span> = Proficient (+{{ characterStore.proficiencyBonus }}) &nbsp;
+        <span class="text-gold-400">●</span> = Thaumaturge WIS bonus (Religion only)
       </div>
     </div>
   </CardFrame>
@@ -130,10 +131,15 @@ const getSkillExample = (key) => skillExamples[key] || 'Unknown skill'
 const abilityLabels = { str: 'STR', dex: 'DEX', con: 'CON', int: 'INT', wis: 'WIS', cha: 'CHA' }
 const getSkillCalc = (skill) => {
   const abilityMod = getAbilityMod(skill.ability)
+  const wisMod = getAbilityMod('wis')
   const sign = (n) => (n >= 0 ? `+${n}` : `${n}`)
   const base = `${abilityLabels[skill.ability]} modifier (${sign(abilityMod)})`
+  const thaum = skill.thaumaturge ? ` + Thaumaturge WIS bonus (${sign(wisMod)})` : ''
   if (skill.proficient) {
-    return `${base} + Proficiency Bonus (${sign(characterStore.proficiencyBonus)}) = ${sign(skill.mod)}`
+    return `${base} + Proficiency Bonus (${sign(characterStore.proficiencyBonus)})${thaum} = ${sign(skill.mod)}`
+  }
+  if (skill.thaumaturge) {
+    return `${base}${thaum} = ${sign(skill.mod)}`
   }
   return `${base} = ${sign(abilityMod)}`
 }
@@ -158,14 +164,14 @@ const skillList = reactive({
   arcana: {
     name: 'Arcana (INT)',
     ability: 'int',
-    proficient: false,
-    mod: computed(() => getAbilityMod('int'))
+    proficient: true, // From Sage background
+    mod: computed(() => getAbilityMod('int') + characterStore.proficiencyBonus)
   },
   athletics: {
     name: 'Athletics (STR)',
     ability: 'str',
     proficient: false,
-    mod: computed(() => getAbilityMod('str'))
+    mod: computed(() => getAbilityMod('str'))  // STR 8 → -1
   },
   deception: {
     name: 'Deception (CHA)',
@@ -176,13 +182,13 @@ const skillList = reactive({
   history: {
     name: 'History (INT)',
     ability: 'int',
-    proficient: false,
-    mod: computed(() => getAbilityMod('int'))
+    proficient: true, // From Sage background
+    mod: computed(() => getAbilityMod('int') + characterStore.proficiencyBonus)
   },
   insight: {
     name: 'Insight (WIS)',
     ability: 'wis',
-    proficient: true, // From Faction Agent background
+    proficient: true, // From Cleric class
     mod: computed(() => getAbilityMod('wis') + (skillList.insight.proficient ? characterStore.proficiencyBonus : 0))
   },
   intimidation: {
@@ -212,8 +218,8 @@ const skillList = reactive({
   perception: {
     name: 'Perception (WIS)',
     ability: 'wis',
-    proficient: true, // From Faction Agent background
-    mod: computed(() => getAbilityMod('wis') + (skillList.perception.proficient ? characterStore.proficiencyBonus : 0))
+    proficient: false,
+    mod: computed(() => getAbilityMod('wis'))
   },
   performance: {
     name: 'Performance (CHA)',
@@ -231,7 +237,8 @@ const skillList = reactive({
     name: 'Religion (INT)',
     ability: 'int',
     proficient: false,
-    mod: computed(() => getAbilityMod('int'))
+    thaumaturge: true, // Divine Order: Thaumaturge adds WIS modifier
+    mod: computed(() => getAbilityMod('int') + getAbilityMod('wis'))
   },
   sleightOfHand: {
     name: 'Sleight of Hand (DEX)',
@@ -248,15 +255,14 @@ const skillList = reactive({
   survival: {
     name: 'Survival (WIS)',
     ability: 'wis',
-    proficient: true, // From Cleric class
-    mod: computed(() => getAbilityMod('wis') + (skillList.survival.proficient ? characterStore.proficiencyBonus : 0))
+    proficient: false,
+    mod: computed(() => getAbilityMod('wis'))
   }
 })
 
 const rollSkill = (key, skill) => {
-  const abilityMod = getAbilityMod(skill.ability)
-  const profBonus = skill.proficient ? characterStore.proficiencyBonus : 0
-  const totalMod = abilityMod + profBonus
+  // Use skill.mod directly — it already includes Thaumaturge WIS bonus where applicable
+  const totalMod = skill.mod
 
   const roll = rollAbilityCheck(totalMod)
   lastRoll.value = roll

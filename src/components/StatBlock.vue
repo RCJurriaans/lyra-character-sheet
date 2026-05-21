@@ -47,7 +47,8 @@
         <template #content>
           <div>
             <p class="mb-2"><span class="text-gold-300 font-bold">What it means:</span> Your roll bonus at the start of combat to determine who goes first.</p>
-            <p class="mb-2"><span class="text-gold-300 font-bold">Calculation:</span> DEX modifier ({{ getMod('dex') >= 0 ? '+' : '' }}{{ getMod('dex') }}) + any magical items or abilities</p>
+            <p class="mb-2"><span class="text-gold-300 font-bold">Calculation:</span> DEX modifier ({{ getMod('dex') >= 0 ? '+' : '' }}{{ getMod('dex') }}) + CHA modifier ({{ getMod('cha') >= 0 ? '+' : '' }}{{ getMod('cha') }}, Satyr Reveler) = {{ store.initiative >= 0 ? '+' : '' }}{{ store.initiative }}</p>
+            <p class="mb-2"><span class="text-gold-300 font-bold">Satyr Reveler:</span> Your race lets you add your Charisma modifier to Initiative in addition to Dexterity.</p>
             <p><span class="text-gold-300 font-bold">When to use:</span> Roll d20 + {{ store.initiative }} when combat starts. Higher rolls go first in turn order.</p>
           </div>
         </template>
@@ -116,7 +117,7 @@ const getAbilityTooltip = (abbr) => {
       h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'What it means: '), 'Physical power and athletic ability.']),
       h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Attack rolls with melee weapons (Mace), Athletics checks, breaking things.']),
       h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), calcMod('str')]),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Mace attack: '), `STR (${sign(getMod('str'))}) + PB (+${store.proficiencyBonus}) = ${sign(getMod('str') + store.proficiencyBonus)} to hit, 1d6${sign(getMod('str'))} damage`]),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Mace attack: '), `STR (${sign(getMod('str'))}) + PB (+${store.proficiencyBonus}) = ${sign(getMod('str') + store.proficiencyBonus)} to hit, 1d6${sign(getMod('str'))} damage. Note: STR 8 means your attack bonus and damage modifier are both -1.`]),
       h('p', [h('span', { class: 'text-gold-300 font-bold' }, 'Examples: '), 'Pushing a boulder, swinging your mace, grappling a foe.'])
     ]),
     dex: () => h('div', [
@@ -130,7 +131,7 @@ const getAbilityTooltip = (abbr) => {
       h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'What it means: '), 'Endurance, health, and vitality.']),
       h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Uses: '), 'Hit Points, concentration saving throws (DC 10 or half damage taken).']),
       h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'Calculation: '), calcMod('con')]),
-      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'HP: '), `Level 1: 8 + ${getMod('con')} = ${8 + getMod('con')}. Levels 2–5: (5 + ${getMod('con')}) × 4 = ${(5 + getMod('con')) * 4}. Total: ${store.hitPoints.max} HP.`]),
+      h('p', { class: 'mb-2' }, [h('span', { class: 'text-gold-300 font-bold' }, 'HP: '), `Level 1: 8 + CON(${sign(getMod('con'))}) = ${8 + getMod('con')}. Levels 2–5: (5 + ${getMod('con')}) × 4 = ${(5 + getMod('con')) * 4}. Total: ${8 + getMod('con') + (5 + getMod('con')) * 4} HP.`]),
       h('p', [h('span', { class: 'text-gold-300 font-bold' }, 'Examples: '), 'Holding your breath, resisting poison, maintaining Spirit Guardians concentration.'])
     ]),
     int: () => h('div', [

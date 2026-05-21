@@ -78,6 +78,7 @@ const spells = [
   { name: 'Command', level: '1st', type: 'Enchantment', castingTime: '1 action', range: '60 feet', components: 'V', duration: '1 round', description: 'A creature you can see makes a DC 14 WIS save or obeys a one-word command: Approach, Drop, Flee, Grovel, Halt, Surrender, etc. Doesn\'t work on undead or creatures that don\'t understand you.' },
   { name: 'Healing Word', level: '1st', type: 'Evocation', castingTime: '1 bonus action', range: '60 feet', components: 'V', duration: 'Instantaneous', description: 'Creature within range regains 2d4 + WIS mod HP (+2 extra from Disciple of Life). Bonus action means you can still cast an attack cantrip this turn.' },
   { name: 'Guiding Bolt', level: '1st', type: 'Evocation', castingTime: '1 action', range: '120 feet', components: 'V,S', duration: 'Instantaneous', description: 'Ranged spell attack (+6 to hit). Hit: 4d6 radiant damage. The next attack roll against the target before the end of your next turn has advantage.', damage: '4d6 radiant' },
+  { name: 'Sanctuary', level: '1st', type: 'Abjuration', castingTime: '1 bonus action', range: '30 feet', components: 'V,S,M', duration: 'Up to 1 minute', description: 'Ward yourself or a creature within range. Any attacker must succeed on a DC 14 WIS save or be forced to choose a new target (or lose the attack/spell). Does not protect against area effects. Ends immediately if the warded creature attacks, deals damage, or casts a harmful spell.' },
   { name: 'Shield of Faith', level: '1st', type: 'Abjuration', castingTime: '1 bonus action', range: '60 feet', components: 'V,S,M', duration: 'Concentration, up to 10 minutes', description: 'A shimmering field surrounds a creature of your choice, granting +2 AC for the duration.' },
 
   // 2nd Level Domain Spells (always prepared — Life Domain, 2024 rules)
@@ -85,7 +86,6 @@ const spells = [
   { name: 'Lesser Restoration', level: '2nd', type: 'Abjuration', domain: true, castingTime: '1 action', range: 'Touch', components: 'V,S', duration: 'Instantaneous', description: 'End one disease or one of the following conditions on a creature you touch: blinded, deafened, paralyzed, or poisoned.' },
 
   // 2nd Level Chosen Spells
-  { name: 'Spiritual Weapon', level: '2nd', type: 'Evocation', castingTime: '1 bonus action', range: '60 feet', components: 'V,S', duration: 'Concentration, up to 1 minute', description: 'Create a spectral weapon. On subsequent turns, use a bonus action to move it up to 20 ft and make a melee spell attack (+6 to hit): 1d8+3 force damage.', damage: '1d8+3 force' },
   { name: 'Hold Person', level: '2nd', type: 'Enchantment', castingTime: '1 action', range: '60 feet', components: 'V,S,M', duration: 'Concentration, up to 1 minute', description: 'Humanoid makes a DC 14 WIS save or is paralyzed. They can retry the save at the end of each of their turns.' },
 
   // 3rd Level Domain Spells (always prepared — Life Domain, 2024 rules)

@@ -63,6 +63,12 @@
             </div>
             <div class="flex items-center gap-1 flex-wrap mt-0.5">
               <span class="text-xs text-gray-500">{{ spell.level }} • {{ spell.type }}</span>
+              <!-- Casting time badge -->
+              <span :class="['text-xs px-1.5 py-0 rounded font-semibold', castingTimeBadge(spell).cls]">
+                {{ castingTimeBadge(spell).label }}
+              </span>
+              <!-- Concentration badge -->
+              <span v-if="isConcentration(spell)" class="text-xs px-1.5 py-0 rounded font-semibold bg-indigo-900 text-indigo-300" title="Concentration — only one at a time">C</span>
               <!-- Category tags -->
               <span
                 v-for="tag in spell.tags?.filter(t => t !== 'ritual')"
@@ -111,6 +117,16 @@ const tagConfig = {
   utility: { label: 'Utility', icon: '🔧', pillClass: 'bg-purple-900 text-purple-300', activeClass: 'bg-purple-700 text-purple-100 border-purple-500' },
   ritual:  { label: 'Ritual',  icon: '📜', pillClass: 'bg-teal-900 text-teal-300',   activeClass: 'bg-teal-700 text-teal-100 border-teal-500'   },
 }
+
+const castingTimeBadge = (spell) => {
+  const ct = (spell.castingTime || '').toLowerCase()
+  if (ct.includes('bonus action')) return { label: '⚡ Bonus Action', cls: 'bg-orange-800 text-orange-200' }
+  if (ct.includes('reaction'))     return { label: '↩ Reaction',     cls: 'bg-red-900 text-red-300' }
+  if (ct.includes('hour') || ct.includes('minute')) return { label: spell.castingTime, cls: 'bg-teal-900 text-teal-300' }
+  return { label: 'Action', cls: 'bg-slate-600 text-gray-400' }
+}
+
+const isConcentration = (spell) => spell.duration?.toLowerCase().includes('concentration')
 
 const borderByPrimaryTag = {
   combat:  'border-red-500',

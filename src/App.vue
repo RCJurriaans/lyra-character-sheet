@@ -42,6 +42,7 @@
         <button @click="resetCharacter" class="btn btn-secondary text-xs md:text-sm py-2 px-2 md:px-4 min-h-10 md:min-h-auto">
           🔄 <span class="hidden xs:inline">Reset</span>
         </button>
+        <DataManager />
       </div>
     </main>
   </div>
@@ -63,6 +64,7 @@ import PageSkills from './components/PageSkills.vue'
 import PageInventory from './components/PageInventory.vue'
 import PageFamiliars from './components/PageFamiliars.vue'
 import PageNotes from './components/PageNotes.vue'
+import DataManager from './components/DataManager.vue'
 
 const { initTheme } = useTheme()
 const isInCombat = ref(false)

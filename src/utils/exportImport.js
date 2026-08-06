@@ -1,11 +1,14 @@
 const EXPORT_VERSION = 1
 
-const LOCAL_STORAGE_KEYS = [
+const JSON_KEYS = [
   'lyra-character-state',
   'savedCharacters',
-  'currentPage',
   'permanentlyDismissedHints',
-  'lyra-hint-preferences',
+  'lyra-hint-preferences'
+]
+
+const RAW_KEYS = [
+  'currentPage',
   'preferredTheme'
 ]
 
@@ -29,10 +32,17 @@ export function exportCharacterData() {
     }
   }
 
-  for (const key of LOCAL_STORAGE_KEYS) {
+  for (const key of JSON_KEYS) {
     const value = localStorage.getItem(key)
     if (value !== null) {
       data[key] = JSON.parse(value)
+    }
+  }
+
+  for (const key of RAW_KEYS) {
+    const value = localStorage.getItem(key)
+    if (value !== null) {
+      data[key] = value
     }
   }
 
@@ -92,9 +102,15 @@ export function importCharacterData(data) {
     throw new Error(error)
   }
 
-  for (const key of LOCAL_STORAGE_KEYS) {
+  for (const key of JSON_KEYS) {
     if (data[key] !== undefined) {
       localStorage.setItem(key, JSON.stringify(data[key]))
+    }
+  }
+
+  for (const key of RAW_KEYS) {
+    if (data[key] !== undefined) {
+      localStorage.setItem(key, data[key])
     }
   }
 

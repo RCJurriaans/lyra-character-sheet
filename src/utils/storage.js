@@ -65,6 +65,9 @@ function mergeCharacterState(defaults, saved) {
     }
   }
 
+  // Heroic Inspiration — runtime flag, kept until spent (no rest resets it)
+  merged.heroicInspiration = saved.heroicInspiration ?? defaults.heroicInspiration ?? false
+
   // Channel Divinity — maxUses from defaults, used count preserved
   // Migrates old boolean format (used: true/false) to counter format (used: 0/1/2)
   if (defaults.channelDivinity) {

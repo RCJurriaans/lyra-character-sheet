@@ -68,6 +68,19 @@ export const spendLuckyPoint = () => {
   return false
 }
 
+// Heroic Inspiration — you hold at most one; it stays until you spend it
+export const gainHeroicInspiration = () => {
+  characterStore.heroicInspiration = true
+  saveCharacterState(characterStore)
+}
+
+export const spendHeroicInspiration = () => {
+  if (!characterStore.heroicInspiration) return false
+  characterStore.heroicInspiration = false
+  saveCharacterState(characterStore)
+  return true
+}
+
 // Channel Divinity — 2 uses per short/long rest (2024 rules)
 export const useChannelDivinity = () => {
   const cd = characterStore.channelDivinity

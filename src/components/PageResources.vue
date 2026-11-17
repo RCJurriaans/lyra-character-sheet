@@ -13,8 +13,9 @@
         <HealingWidget />
       </div>
 
-      <!-- Column 2: Lucky Points & Features -->
+      <!-- Column 2: Inspiration, Lucky Points & Features -->
       <div class="space-y-4">
+        <HeroicInspirationWidget />
         <LuckyPointsWidget />
         <FeatureTracker />
       </div>
@@ -24,6 +25,7 @@
 
 <script setup>
 import HealingWidget from './HealingWidget.vue'
+import HeroicInspirationWidget from './HeroicInspirationWidget.vue'
 import LuckyPointsWidget from './LuckyPointsWidget.vue'
 import FeatureTracker from './FeatureTracker.vue'
 </script>

@@ -34,6 +34,7 @@
     "current": 3,
     "max": 3
   },
+  "heroicInspiration": false,
   "channelDivinity": {
     "used": 0,
     "maxUses": 2

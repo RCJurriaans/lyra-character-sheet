@@ -7,14 +7,14 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
         <div class="bg-slate-700 rounded p-3">
           <div class="font-bold text-gold-300 mb-1">How Many?</div>
-          <div class="text-gray-300">You can have <strong>1 active familiar</strong> at a time. Casting the spell again dismisses the current one to a pocket dimension — you can resummon it later, or choose a new form.</div>
+          <div class="text-gray-300">You can have <strong>1 familiar</strong> at a time. Casting the spell again just gives it a new form. As a Magic action you can tuck it into a pocket dimension, and call it back the same way. It only needs recasting if it drops to 0 HP.</div>
         </div>
         <div class="bg-slate-700 rounded p-3">
           <div class="font-bold text-gold-300 mb-1">How to Cast</div>
           <div class="text-gray-300">
-            <div>📜 <strong>Ritual</strong> — 10 min, no slot, <em>unlimited</em></div>
-            <div class="mt-1">✨ <strong>MI Free</strong> — instant, 1/Long Rest</div>
-            <div class="mt-1">🔮 <strong>Spell Slot</strong> — instant, any time</div>
+            <div>📜 <strong>Ritual</strong> — 1 hr 10 min, no slot, <em>unlimited</em></div>
+            <div class="mt-1">✨ <strong>MI Free</strong> — 1 hour, no slot, 1/Long Rest</div>
+            <div class="mt-1">🔮 <strong>Spell Slot</strong> — 1 hour, uses a 1st+ slot</div>
           </div>
         </div>
         <div class="bg-slate-700 rounded p-3">

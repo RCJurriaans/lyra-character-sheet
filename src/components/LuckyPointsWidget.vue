@@ -27,15 +27,15 @@
     <StatTooltip title="Lucky Points">
       <div class="text-center text-sm text-gray-400 mb-4">
         <div class="font-bold text-gold-300">{{ store.luckyPoints.current }} / {{ store.luckyPoints.max }}</div>
-        <p class="text-xs mt-1">Spend to re-roll d20s or add to checks</p>
+        <p class="text-xs mt-1">Spend for Advantage, or to give an attacker Disadvantage</p>
       </div>
       <template #content>
         <div>
-          <p class="mb-2"><span class="text-gold-300 font-bold">What it means:</span> A Satyr's ability to defy fate. You have 3 Lucky Points per long rest.</p>
-          <p class="mb-2"><span class="text-gold-300 font-bold">How to use (pick ONE):</span></p>
-          <p class="mb-1"><span class="text-gold-300">Option A - Re-roll:</span> When you roll a d20, you can spend 1 Lucky Point to re-roll. Use the new result (even if lower).</p>
-          <p class="mb-2"><span class="text-gold-300">Option B - Add to roll:</span> Spend 1 Lucky Point to add 1d4 to an ability check, attack roll, or save AFTER you see the result.</p>
-          <p><span class="text-gold-300 font-bold">Reset:</span> Lucky Points reset to 3 after a long rest.</p>
+          <p class="mb-2"><span class="text-gold-300 font-bold">What it means:</span> The Lucky feat (2024). You have Luck Points equal to your Proficiency Bonus ({{ store.luckyPoints.max }}).</p>
+          <p class="mb-2"><span class="text-gold-300 font-bold">How to use (1 point each):</span></p>
+          <p class="mb-1"><span class="text-gold-300">Advantage:</span> When you roll a d20 for an attack, ability check or saving throw, spend 1 point to give yourself Advantage on it.</p>
+          <p class="mb-2"><span class="text-gold-300">Disadvantage:</span> When a creature rolls a d20 for an attack against you, spend 1 point to give that roll Disadvantage.</p>
+          <p><span class="text-gold-300 font-bold">Reset:</span> All points come back on a long rest.</p>
         </div>
       </template>
     </StatTooltip>

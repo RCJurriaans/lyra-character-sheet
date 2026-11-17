@@ -189,7 +189,7 @@ const spells = [
   { name: 'Find Familiar',    level: '1st',     type: 'Conjuration',   tags: ['utility', 'ritual'],
     source: 'Magic Initiate (Wizard)',
     castingTime: '1 hour',        range: '10 feet',  components: 'V,S,M', duration: 'Instantaneous',
-    description: 'Summon a familiar (bat, cat, owl, hawk, rat, raven, spider, weasel, etc.). See through its eyes, deliver touch spells through it, and it acts on your initiative. Your familiar persists until dismissed or killed — you do not resummon it daily. Options to cast: (1) As a ritual — 10 min, no spell slot, unlimited times. (2) Magic Initiate free use — 1/Long Rest, instantly. (3) Spell slot — any time at level 5+.' },
+    description: 'Summon a familiar (bat, cat, owl, hawk, rat, raven, spider, weasel, etc.). See through its eyes, deliver touch spells through it, and it acts on your initiative. Your familiar stays until it drops to 0 HP, so you do not resummon it daily. Every way to cast it takes time: (1) As a ritual: 1 hour 10 minutes, no spell slot, as often as you like. (2) Magic Initiate free use: 1 hour, no slot, 1/Long Rest. (3) Spell slot: 1 hour.' },
 
   { name: 'Command',          level: '1st',     type: 'Enchantment',   tags: ['combat'],
     castingTime: '1 action',      range: '60 feet',  components: 'V',   duration: '1 round',

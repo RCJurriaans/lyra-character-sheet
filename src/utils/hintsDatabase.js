@@ -438,8 +438,8 @@ export const hintsDatabase = {
       },
       {
         id: 'combat_critical_2',
-        title: 'Preserve Life HP Pool',
-        content: 'You can heal 25 HP total with Preserve Life (Channel Divinity). Spread this across multiple allies to prevent more deaths.',
+        title: 'Preserve Life Healing',
+        content: 'Each Preserve Life use (1 Channel Divinity) heals up to 25 HP, split across Bloodied allies. Spread it to prevent more deaths.',
         category: 'critical',
         difficulty: 'intermediate',
         condition: (store) => store.preserveLife?.max >= 25
@@ -470,8 +470,8 @@ export const hintsDatabase = {
       // Strategy hints (5)
       {
         id: 'resources_strategy_1',
-        title: 'Preserve Life Pool Strategy',
-        content: 'Your Preserve Life pool (25 HP) is a one-use per rest heal-everyone tool. Save it for emergencies when multiple allies are injured.',
+        title: 'Preserve Life Strategy',
+        content: 'Preserve Life (up to 25 HP per Channel Divinity use) is your heal-everyone tool. Save it for when several allies are Bloodied.',
         category: 'strategy',
         difficulty: 'intermediate',
         condition: (store) => store.preserveLife?.max === 25

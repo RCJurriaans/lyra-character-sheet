@@ -79,12 +79,13 @@ function mergeCharacterState(defaults, saved) {
     }
   }
 
-  // Preserve Life — max from defaults, current clamped
+  // Preserve Life — no pool in 2024 rules (each Channel Divinity use heals the
+  // full amount), so current always equals max
   if (defaults.preserveLife) {
     const newMax = defaults.preserveLife.max
     merged.preserveLife = {
       max: newMax,
-      current: Math.min(saved.preserveLife?.current ?? newMax, newMax)
+      current: newMax
     }
   }
 

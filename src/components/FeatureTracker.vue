@@ -66,42 +66,21 @@
         </template>
       </StatTooltip>
 
-      <!-- Preserve Life -->
+      <!-- Preserve Life (2024: each use heals up to 5 × cleric level, no pool) -->
       <StatTooltip title="Preserve Life">
-        <div>
-          <div class="flex items-center justify-between mb-1">
-            <span class="text-xs font-bold text-gray-300">Preserve Life</span>
-            <span class="text-xs text-gold-400">{{ store.preserveLife.current }}/{{ store.preserveLife.max }} HP pool</span>
-          </div>
-          <div class="hp-bar mb-2">
-            <div
-              class="hp-fill bg-fortuneGreen"
-              :style="{ width: (store.preserveLife.current / store.preserveLife.max) * 100 + '%' }"
-            ></div>
-          </div>
-          <div class="flex gap-2">
-            <input
-              v-model.number="preserveAmount"
-              type="number"
-              min="1"
-              :max="store.preserveLife.current"
-              class="flex-1 bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm"
-            />
-            <button
-              @click="activatePreserveLife"
-              :disabled="preserveAmount <= 0 || preserveAmount > store.preserveLife.current || store.channelDivinity.used >= store.channelDivinity.maxUses"
-              class="btn btn-gold px-3 text-sm disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              🌿 Use
-            </button>
-          </div>
-          <p class="text-xs text-gray-500 mt-1">Distribute {{ store.preserveLife.max }} HP among Bloodied allies (≤ half HP) within 30 ft. Costs 1 CD use.</p>
-        </div>
+        <button
+          @click="activatePreserveLife"
+          :disabled="store.channelDivinity.used >= store.channelDivinity.maxUses"
+          class="btn btn-gold w-full text-sm disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          🌿 Preserve Life (split {{ store.preserveLife.max }} HP among Bloodied allies)
+        </button>
         <template #content>
           <div>
-            <p class="mb-2"><span class="text-gold-300 font-bold">What it does:</span> Distribute up to {{ store.preserveLife.max }} HP of healing among any number of Bloodied (≤ half HP) creatures within 30 ft.</p>
-            <p class="mb-2"><span class="text-gold-300 font-bold">Restriction:</span> Cannot heal a creature above half its max HP. Costs 1 Channel Divinity use.</p>
-            <p><span class="text-gold-300 font-bold">Reset:</span> Pool ({{ store.preserveLife.max }} HP) resets on Short or Long Rest.</p>
+            <p class="mb-2"><span class="text-gold-300 font-bold">What it does:</span> Restore up to {{ store.preserveLife.max }} HP (5 × cleric level), split as you like among Bloodied creatures (at or below half HP) within 30 ft.</p>
+            <p class="mb-2"><span class="text-gold-300 font-bold">Restriction:</span> Can't bring anyone above half their max HP. Unused HP is lost.</p>
+            <p class="mb-2"><span class="text-gold-300 font-bold">Action:</span> 1 Magic action, costs 1 Channel Divinity use.</p>
+            <p><span class="text-gold-300 font-bold">Reset:</span> No pool to track. Every Channel Divinity use gives the full {{ store.preserveLife.max }} HP again.</p>
           </div>
         </template>
       </StatTooltip>
@@ -149,7 +128,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import {
   characterStore,
   useChannelDivinity as storeSpendCD,
@@ -159,16 +137,11 @@ import {
 import StatTooltip from './StatTooltip.vue'
 
 const store = characterStore
-const preserveAmount = ref(5)
 
 const spendCD = () => storeSpendCD()
 const restoreCD = () => storeRestoreCD()
 
-const activatePreserveLife = () => {
-  if (preserveAmount.value > 0) {
-    storeUsePreserveLife(preserveAmount.value)
-  }
-}
+const activatePreserveLife = () => storeUsePreserveLife()
 </script>
 
 <style scoped>

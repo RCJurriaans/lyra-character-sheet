@@ -101,11 +101,11 @@ export const restoreChannelDivinity = () => {
   return false
 }
 
-// Preserve Life — consumes a Channel Divinity use (2024 rules)
-export const usePreserveLife = (amount) => {
+// Preserve Life — each Channel Divinity use heals up to the full 5 × level
+// (2024 rules), so there is no pool to drain; it only spends a CD use
+export const usePreserveLife = () => {
   const cd = characterStore.channelDivinity
-  if (characterStore.preserveLife.current >= amount && cd.used < cd.maxUses) {
-    characterStore.preserveLife.current -= amount
+  if (cd.used < cd.maxUses) {
     cd.used++
     saveCharacterState(characterStore)
     return true

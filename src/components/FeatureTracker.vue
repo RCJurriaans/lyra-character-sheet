@@ -112,7 +112,7 @@
         </li>
         <li>
           <strong class="text-gold-300">Reveler</strong> (Satyr)<br>
-          Proficiency in Performance &amp; Persuasion. Add CHA mod (+1) to Initiative. (DEX +2 + CHA +1 = Initiative +3)
+          Proficiency in Performance &amp; Persuasion. (Does not add to Initiative: that is DEX only, +2.)
         </li>
         <li>
           <strong class="text-gold-300">Magic Resistance</strong> (Satyr)<br>

@@ -4,7 +4,7 @@
       ⚡ Features & Abilities
     </h2>
 
-    <!-- Channel Divinity (2024: 2 uses, recharges on Short or Long Rest) -->
+    <!-- Channel Divinity (2024: 3 uses at Cleric 6, recharges on Short or Long Rest) -->
     <div class="border-b border-slate-700 pb-4 mb-4">
       <div class="flex items-center justify-between mb-2">
         <span class="text-sm font-bold text-gray-100">Channel Divinity</span>
@@ -97,6 +97,10 @@
         <li>
           <strong class="text-gold-300">Disciple of Life</strong> (Life Domain lvl 3)<br>
           Healing spells restore extra HP equal to 2 + the spell's level (e.g. Cure Wounds 1st = +3, Healing Word 1st = +3).
+        </li>
+        <li>
+          <strong class="text-gold-300">Blessed Healer</strong> (Life Domain lvl 6)<br>
+          When you cast a spell with a spell slot that restores HP to a creature other than you, you also regain 2 + the slot's level in HP (e.g. Healing Word 1st = +3, Mass Healing Word 3rd = +5).
         </li>
         <li>
           <strong class="text-gold-300">Lucky Feat</strong> (lvl 4 General Feat)<br>

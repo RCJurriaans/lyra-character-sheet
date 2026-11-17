@@ -227,6 +227,10 @@ const spells = [
     castingTime: '1 action',      range: '60 feet',  components: 'V,S,M', duration: 'Concentration, up to 1 minute',
     description: 'A humanoid makes a DC 14 WIS save or is paralyzed. They can retry the save at the end of each of their turns. Melee attacks against a paralyzed creature within 5 ft are critical hits.' },
 
+  { name: 'Augury',           level: '2nd',     type: 'Divination',    tags: ['utility', 'ritual'],
+    castingTime: '1 minute (or 11 min as ritual)', range: 'Self', components: 'V,S,M', duration: 'Instantaneous',
+    description: 'Ask about a specific course of action you plan to take in the next 30 minutes. The DM answers with an omen: Weal (good), Woe (bad), Weal and Woe (both), or Indifference (neither). Lyra reads it in her tarot deck. Each extra casting before a Long Rest has a cumulative 25% chance of no answer. Can be cast as a ritual without a slot. Material: specially marked cards worth 25+ GP.' },
+
   // ── 3rd Level ─────────────────────────────────────────────────────────────
   { name: 'Mass Healing Word', level: '3rd',    type: 'Evocation',     tags: ['healing'],
     domain: true,

@@ -81,7 +81,7 @@ export const spendHeroicInspiration = () => {
   return true
 }
 
-// Channel Divinity — 2 uses per short/long rest (2024 rules)
+// Channel Divinity — uses per short/long rest come from character.json (3 at Cleric 6)
 export const useChannelDivinity = () => {
   const cd = characterStore.channelDivinity
   if (cd.used < cd.maxUses) {
@@ -127,7 +127,7 @@ export const longRest = () => {
   // Restore Lucky Points
   characterStore.luckyPoints.current = characterStore.luckyPoints.max
 
-  // Restore Channel Divinity (2 uses)
+  // Restore Channel Divinity
   characterStore.channelDivinity.used = 0
 
   // Restore Preserve Life

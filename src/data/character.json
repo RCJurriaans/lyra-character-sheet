@@ -2,7 +2,7 @@
   "name": "Lyra",
   "class": "Cleric",
   "domain": "Life",
-  "level": 5,
+  "level": 6,
   "race": "Satyr",
   "alignment": "Chaotic Good",
   "background": "Sage",
@@ -15,8 +15,8 @@
     "cha": 10
   },
   "hitPoints": {
-    "current": 43,
-    "max": 43,
+    "current": 51,
+    "max": 51,
     "temporary": 0
   },
   "ac": 19,
@@ -28,7 +28,7 @@
   "spellSlots": {
     "1": { "max": 4, "used": 0 },
     "2": { "max": 3, "used": 0 },
-    "3": { "max": 2, "used": 0 }
+    "3": { "max": 3, "used": 0 }
   },
   "luckyPoints": {
     "current": 3,
@@ -37,11 +37,11 @@
   "heroicInspiration": false,
   "channelDivinity": {
     "used": 0,
-    "maxUses": 2
+    "maxUses": 3
   },
   "preserveLife": {
-    "current": 25,
-    "max": 25
+    "current": 30,
+    "max": 30
   },
   "savingThrows": {
     "str": -1,

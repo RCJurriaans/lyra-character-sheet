@@ -16,7 +16,7 @@
         <template #content>
           <div>
             <p class="mb-2"><span class="text-gold-300 font-bold">What it means:</span> Your current health. When HP reaches 0, you fall unconscious and begin making death saves.</p>
-            <p class="mb-2"><span class="text-gold-300 font-bold">Max HP:</span> {{ store.hitPoints.max }} (8 base + CON modifier ×{{ store.level }} levels)</p>
+            <p class="mb-2"><span class="text-gold-300 font-bold">Max HP:</span> {{ store.hitPoints.max }} (8 at level 1 + 5 average per level after + CON modifier ×{{ store.level }} levels)</p>
             <p class="mb-2"><span class="text-gold-300 font-bold">Current:</span> {{ store.hitPoints.current }} HP</p>
             <p><span class="text-gold-300 font-bold">When to use:</span> Subtract damage taken. Gain healing from spells or potions. At 0 HP, start making death saves.</p>
           </div>

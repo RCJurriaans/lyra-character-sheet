@@ -12,7 +12,7 @@
     "con": 16,
     "int": 8,
     "wis": 17,
-    "cha": 12
+    "cha": 10
   },
   "hitPoints": {
     "current": 43,
@@ -20,7 +20,7 @@
     "temporary": 0
   },
   "ac": 19,
-  "initiative": 3,
+  "initiative": 2,
   "speed": 35,
   "proficiencyBonus": 3,
   "spellSaveDC": 14,
@@ -48,29 +48,29 @@
     "con": 3,
     "int": -1,
     "wis": 6,
-    "cha": 4
+    "cha": 3
   },
   "skills": {
     "acrobatics": { "mod": 2, "proficient": false },
     "animalHandling": { "mod": 3, "proficient": false },
-    "arcana": { "mod": 2, "proficient": true },
+    "arcana": { "mod": 5, "proficient": true },
     "athletics": { "mod": -1, "proficient": false },
-    "deception": { "mod": 1, "proficient": false },
+    "deception": { "mod": 0, "proficient": false },
     "history": { "mod": 2, "proficient": true },
     "insight": { "mod": 6, "proficient": true },
-    "intimidation": { "mod": 1, "proficient": false },
+    "intimidation": { "mod": 0, "proficient": false },
     "investigation": { "mod": -1, "proficient": false },
     "medicine": { "mod": 6, "proficient": true },
     "nature": { "mod": -1, "proficient": false },
     "perception": { "mod": 3, "proficient": false },
-    "performance": { "mod": 4, "proficient": true },
-    "persuasion": { "mod": 4, "proficient": true },
+    "performance": { "mod": 3, "proficient": true },
+    "persuasion": { "mod": 3, "proficient": true },
     "religion": { "mod": 2, "proficient": false },
     "sleightOfHand": { "mod": 2, "proficient": false },
     "stealth": { "mod": 2, "proficient": false },
     "survival": { "mod": 3, "proficient": false }
   },
-  "languages": ["Common", "Sylvan", "Dwarvish", "Goblin"],
+  "languages": ["Common", "Sylvan", "Goblin"],
   "traits": {
     "personality": "I flip a coin or draw a card to make every major decision. Fate knows better than I do.",
     "ideal": "Freedom (Chaotic): The world is a game of chance, and everyone deserves a turn to roll the dice.",

@@ -47,8 +47,7 @@
         <template #content>
           <div>
             <p class="mb-2"><span class="text-gold-300 font-bold">What it means:</span> Your roll bonus at the start of combat to determine who goes first.</p>
-            <p class="mb-2"><span class="text-gold-300 font-bold">Calculation:</span> DEX modifier ({{ getMod('dex') >= 0 ? '+' : '' }}{{ getMod('dex') }}) + CHA modifier ({{ getMod('cha') >= 0 ? '+' : '' }}{{ getMod('cha') }}, Satyr Reveler) = {{ store.initiative >= 0 ? '+' : '' }}{{ store.initiative }}</p>
-            <p class="mb-2"><span class="text-gold-300 font-bold">Satyr Reveler:</span> Your race lets you add your Charisma modifier to Initiative in addition to Dexterity.</p>
+            <p class="mb-2"><span class="text-gold-300 font-bold">Calculation:</span> DEX modifier ({{ getMod('dex') >= 0 ? '+' : '' }}{{ getMod('dex') }}) = {{ store.initiative >= 0 ? '+' : '' }}{{ store.initiative }}</p>
             <p><span class="text-gold-300 font-bold">When to use:</span> Roll d20 + {{ store.initiative }} when combat starts. Higher rolls go first in turn order.</p>
           </div>
         </template>
